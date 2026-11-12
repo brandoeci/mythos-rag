@@ -536,24 +536,27 @@ cambio rompe los otros dos modulos.
 
 ### orden entre los tres
 
-- **jue 12 (hoy):** los tres clonan y dejan el entorno **corriendo y probado**
-  esta noche. un problema de instalacion descubierto el lunes cuesta un dia que
-  no existe. se ratifica `Answer`. hildebrando verifica los `gutenberg_id`,
-  ximena arranca las preguntas contra el stub, lancheros se hace un indice
-  rapido de una sola obra para no esperar a nadie.
-- **vie 13:** la rebanada vertical responde una pregunta de punta a punta. si no,
-  se recorta ese mismo dia.
-- **sab 14:** ximena verifica a mano el grupo 2, que lancheros necesita el lunes.
-  hildebrando entrega chroma persistido y bm25.
-- **dom 15:** hildebrando entrega el hibrido con los alphas sueltos. al cerrar
-  el dia, **integracion**: el pipeline real corre contra el indice real y
-  `STUB` pasa a `False`.
-- **lun 16:** ximena corre las 4 configuraciones aunque esten incompletas, para
-  tener el arnes probado. lancheros construye `detect_conflict`.
-- **mar 17:** nucleo cerrado y corte del stretch.
-- **mie 18:** code freeze y corridas finales.
-- **jue 19:** escritura del notebook y ensayo del video.
-- **vie 20:** entrega.
+cada dia nombra a los tres. si alguien no aparece en una fila, es un error de la fila, no es que no
+tenga nada que hacer.
+
+| dia | hildebrando | lancheros | ximena |
+| --- | --- | --- | --- |
+| **jue 12** (hoy) | ids verificados, corpus descargado y atribucion por seccion andando. sigue con `chunk_document` | clonar y dejar **el entorno probado esta noche**. ratificar `Answer`. armarse un indice rapido de **una** obra para no esperar a nadie | clonar y probar el entorno. las 30 preguntas ya estan listas, asi que arranca con gradio contra el stub |
+| **vie 13** | `chunk_document` con el locator de cada obra, y entrega el indice de una obra real | **la rebanada vertical: una pregunta de punta a punta con cita.** es el hito del dia y del proyecto | gradio mostrando las tres formas de respuesta. empieza `is_correct` con el juez |
+| **sab 14** | chroma persistido y bm25 | verificacion de citas por substring, y **cache en disco de las llamadas al llm** | validar al juez: calificar 10 a mano y comparar |
+| **dom 15** | el hibrido con los alphas sueltos, y el mapa de variantes griego/latino | `grade` y abstencion, con el umbral calibrado contra el grupo 3 | el arnes corriendo las 4 configuraciones contra el stub |
+| | **al cerrar el domingo, los tres: integracion. el pipeline real contra el indice real, `STUB = False`** | | |
+| **lun 16** | dedup, y la tabla de secciones y chunks por obra | `detect_conflict` | primera corrida real de la tabla de ablacion |
+| **mar 17** | cierra su tabla para el notebook y apoya a quien vaya atras | el grafo de langgraph completo, los flags de configuracion y el diagrama exportado | los tres ejemplos cualitativos lado a lado |
+| | **corte del stretch: el grafo de entidades entra o se cae** | | |
+| **mie 18** | congela el indice, persistido y con las salidas guardadas | congela `rag.py`. de aqui solo arregla lo que la medicion saque | corridas finales y tabla definitiva |
+| | **code freeze. nada nuevo entra despues** | | |
+| **jue 19** | escribe la Metodologia de corpus e indice | escribe la Metodologia del pipeline, con el diagrama | escribe Resultados y Discusion, y el guion del video |
+| | **ensayo del video cronometrado, los tres** | | |
+| **vie 20** | graba su parte | graba su parte | graba su parte, monta y **envia en la tarde** |
+
+dos cosas que no son de nadie en particular y por eso se olvidan: **el sync diario de 15 minutos a
+hora fija**, y que **se integra todos los dias**, no el miercoles.
 
 ## cronograma
 
