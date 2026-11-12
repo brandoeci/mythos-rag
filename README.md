@@ -82,11 +82,53 @@ gradio
 fuentes de dominio publico (project gutenberg). varias obras a proposito: **sin varias fuentes no
 hay contradicciones**, y la contradiccion es la identidad del proyecto.
 
-- teogonia, hesiodo
-- biblioteca, apolodoro
-- iliada y odisea, homero
-- the age of fable, bulfinch
-- metamorfosis, ovidio
+ids verificados y descargados. **952.000 tokens en total**, ocho veces el corpus del taller 2:
+
+| autor | obra | id | traduccion | tokens | parrafos |
+| --- | --- | --- | --- | --- | --- |
+| hesiodo | teogonia | 348 | Evelyn-White, Loeb 1914 | 90.815 | 8.225 |
+| homero | iliada | 2199 | Samuel Butler, prosa | 152.757 | 13.292 |
+| homero | odisea | 1727 | Samuel Butler, prosa | 129.571 | 10.397 |
+| apolonio | argonautica | 830 | R. C. Seaton, 1912 | 61.281 | 5.019 |
+| ovidio | metamorfosis i-vii | 21765 | Henry T. Riley, prosa | 125.333 | 11.392 |
+| ovidio | metamorfosis viii-xv | 26073 | Henry T. Riley, prosa | 139.460 | 12.461 |
+| bulfinch | the age of fable | 3327 | edicion de 1913 | 145.933 | 14.584 |
+| berens | myths and legends | 22381 | edicion de 1894 | 106.475 | 10.210 |
+
+**apolodoro quedo fuera: la Biblioteca no esta en gutenberg.** era una de las fuentes primarias
+que queriamos. se reemplaza por la Argonautica de apolonio (primaria, da su propia version de
+jason y medea) y el compendio de berens, que cuenta los mismos mitos que bulfinch y choca con el
+en los detalles.
+
+### tres cosas que salieron de verificar el corpus
+
+**1. el corpus se divide en nombres griegos y latinos, y la division es casi total.**
+
+| | heracles / hercules | odysseus / ulysses | zeus / jove |
+| --- | --- | --- | --- |
+| hesiodo, apolonio, berens | 263 / 4 | 136 / 2 | 698 / 0 |
+| homero, ovidio, bulfinch | 6 / 279 | 7 / 995 | 35 / 563 |
+
+preguntar por "heracles" recupera solo tres de las ocho obras, y "hercules" las otras cinco. sin
+el mapa de variantes **el retrieval pierde la mitad del corpus en silencio**, y peor: las
+contradicciones suelen estar entre una fuente que usa nombres griegos y otra que usa latinos, asi
+que `detect_conflict` nunca veria los dos lados. esto sube la tarea 4 de hildebrando de deseable
+a bloqueante.
+
+**2. el corpus si se contradice, verificado con el texto a la vista.** el nacimiento de afrodita:
+
+- hesiodo, teogonia: nace de la espuma del mar despues de que crono mutila a urano, sin madre.
+  *"a white foam spread around them [...] and in it there grew a maiden [...] Her gods and men call
+  Aphrodite, and the foam-born goddess"*
+- homero, iliada: venus tiene madre. *"he commits him to the care of Apollo and goes to Olympus,
+  where she is tended by her mother Dione"*
+
+y notese que cruza justo la division del punto 1: una dice "aphrodite" y la otra "venus".
+
+**3. quedan restos de gutenberg despues de limpiar**, en cuatro obras: ovidio i-vii (3
+"transcriber", 1 "copyright"), ovidio viii-xv (1 "gutenberg", 4 "transcriber"), hesiodo y bulfinch
+(1 "gutenberg" cada uno). son pocos pero hay que sacarlos: si un chunk de esos entra al indice, el
+sistema puede citar una nota del transcriptor como si fuera homero.
 
 el corpus se baja a `data/` en la primera corrida y despues se lee del disco. `data/` e `index/`
 no estan en el repo porque se regeneran solos.
@@ -149,6 +191,9 @@ los numeros de esta tabla.
 - [x] esqueleto de los cinco modulos, con firmas, tipos y docstrings
 - [x] modo stub: `app.py` y `evaluate.py` corren sin que el pipeline exista
 - [x] `proyecto.ipynb` con las secciones de la plantilla del curso
+- [x] los ocho `gutenberg_id` verificados y el corpus descargado (952k tokens)
+- [x] `strip_boilerplate` y `normalize` corriendo sobre las ocho obras
+- [x] verificado que el corpus **si** se contradice (afrodita), que era el riesgo silencioso
 
 ### nucleo
 

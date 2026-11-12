@@ -25,6 +25,7 @@ class Source:
     work: str
     gutenberg_id: int
     filename: str
+    translation: str  # cual traduccion es. dos traducciones dan textos distintos
 
     @property
     def url(self) -> str:
@@ -35,18 +36,23 @@ class Source:
         return DATA_DIR / self.filename
 
 
-# TODO(hildebrando): verificar cada gutenberg_id en gutenberg.org antes de usarlo.
-# los ids de abajo estan en cero a proposito: no se adivinan, se confirman uno
-# por uno abriendo la ficha de la obra y copiando el numero del ebook.
-# ojo al escoger la edicion: varias de estas obras tienen varias traducciones en
-# gutenberg, y la traduccion cambia el texto que vamos a citar.
+# ids verificados en gutenberg.org. si se cambia una edicion hay que cambiar
+# tambien `translation`: es lo que nos dice que texto es el que estamos citando.
+#
+# apolodoro (la Biblioteca) **no esta en gutenberg**, y era una de las fuentes
+# primarias que queriamos para las contradicciones. se reemplaza por dos cosas:
+# la Argonautica de apolonio (fuente primaria, da su propia version de jason y
+# medea) y el compendio de berens, que cuenta los mismos mitos que bulfinch y
+# por eso choca con el en los detalles.
 SOURCES: list[Source] = [
-    Source("hesiodo", "teogonia", 0, "teogonia.txt"),
-    Source("apolodoro", "biblioteca", 0, "biblioteca.txt"),
-    Source("homero", "iliada", 0, "iliada.txt"),
-    Source("homero", "odisea", 0, "odisea.txt"),
-    Source("bulfinch", "the age of fable", 0, "age_of_fable.txt"),
-    Source("ovidio", "metamorfosis", 0, "metamorfosis.txt"),
+    Source("hesiodo", "teogonia", 348, "hesiodo.txt", "Evelyn-White, Loeb 1914"),
+    Source("homero", "iliada", 2199, "iliada.txt", "Samuel Butler, prosa"),
+    Source("homero", "odisea", 1727, "odisea.txt", "Samuel Butler, prosa"),
+    Source("apolonio", "argonautica", 830, "argonautica.txt", "R. C. Seaton, 1912"),
+    Source("ovidio", "metamorfosis", 21765, "ovidio_i_vii.txt", "Henry T. Riley, prosa"),
+    Source("ovidio", "metamorfosis", 26073, "ovidio_viii_xv.txt", "Henry T. Riley, prosa"),
+    Source("bulfinch", "the age of fable", 3327, "bulfinch.txt", "edicion de 1913"),
+    Source("berens", "myths and legends", 22381, "berens.txt", "edicion de 1894"),
 ]
 
 
@@ -91,7 +97,12 @@ def normalize(text: str) -> str:
     a diferencia del taller 2 no se pasa a minusculas ni se botan los signos:
     el texto se va a **citar verbatim**, asi que se conserva como esta. la
     limpieza agresiva va despues, solo sobre la copia que indexa bm25.
+
+    los .txt de gutenberg vienen con finales de linea CRLF, asi que hay que
+    normalizarlos **antes** de partir por parrafos: si no, "\\n\\n" no encuentra
+    nada y el libro entero queda como un solo parrafo.
     """
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
     paragraphs = [" ".join(block.split()) for block in text.split("\n\n")]
     return "\n\n".join(block for block in paragraphs if block)
 
