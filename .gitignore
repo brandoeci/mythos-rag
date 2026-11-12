@@ -1,0 +1,16 @@
+# entornos
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# secretos
+.env
+
+# datos y artefactos pesados (se regeneran, no van al repo)
+data/
+index/
+cache/
+
+# notebooks
+.ipynb_checkpoints/

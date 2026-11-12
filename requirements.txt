@@ -1,0 +1,24 @@
+# embeddings locales (no gastan cuota de API)
+sentence-transformers
+
+# vector store con metadata y persistencia en disco
+chromadb
+
+# retrieval lexico para el hibrido
+rank-bm25
+
+# orquestacion del pipeline y cliente de gemini
+langgraph
+langchain-google-genai
+
+# interfaz de la demo
+gradio
+
+# utilidades
+python-dotenv
+pandas
+jupyter
+
+# nota: sin versiones fijas todavia. cuando el pipeline corra estable,
+# congelar con `pip freeze > requirements.txt` para que el entregable
+# sea reproducible el dia de la revision.
