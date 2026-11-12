@@ -67,6 +67,11 @@ SOURCES: list[Source] = [
     Source("homero", "iliada", 2199, "iliada.txt", "Samuel Butler, prosa"),
     Source("homero", "odisea", 1727, "odisea.txt", "Samuel Butler, prosa"),
     Source("apolonio", "argonautica", 830, "argonautica.txt", "R. C. Seaton, 1912"),
+    # OJO: la edicion de riley alterna el poema con el comentario del propio
+    # riley (siglo XIX). la estructura es `FABLE N. [refs]` = texto de ovidio,
+    # y `EXPLANATION.` = nota de riley. son 109 bloques EXPLANATION entre los
+    # dos tomos, y 28 de ellos discuten versiones de otros autores. hay que
+    # separarlos: un chunk de una nota citado como "ovidio" es una cita falsa.
     Source("ovidio", "metamorfosis", 21765, "ovidio_i_vii.txt", "Henry T. Riley, prosa"),
     Source("ovidio", "metamorfosis", 26073, "ovidio_viii_xv.txt", "Henry T. Riley, prosa"),
     Source("bulfinch", "the age of fable", 3327, "bulfinch.txt", "edicion de 1913"),

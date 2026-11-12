@@ -8,7 +8,7 @@ maquinaria queda probada.
 """
 
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import pandas as pd
@@ -35,6 +35,10 @@ class Question:
     question: str
     reference: str
     expected_sources: list[str]
+    # los pasajes verbatim que respaldan `reference`, copiados del corpus al
+    # verificar la pregunta a mano. no los usa el arnes: son la evidencia de que
+    # la pregunta se reviso de verdad y el material para la discusion.
+    passages: list[str] = field(default_factory=list)
 
     @property
     def should_abstain(self) -> bool:

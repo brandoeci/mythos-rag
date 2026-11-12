@@ -158,6 +158,41 @@ esto define el `locator` de la tarea 3 de hildebrando. son cuatro formatos disti
 latinos entre corchetes, asi que la cita puede apuntar al verso y no solo al libro. es el locator
 mas preciso del corpus y conviene aprovecharlo en la demo.
 
+**pero el mismo archivo trae una trampa:** la edicion de riley **alterna el poema con el
+comentario de riley**, del siglo XIX. la estructura es `FABLE N. [refs]` para el texto de ovidio y
+`EXPLANATION.` para la nota. son 109 bloques de nota entre los dos tomos. si un chunk de una nota
+entra al indice, el sistema lo citara como "ovidio, metamorfosis" y sera una cita falsa de
+diecinueve siglos de diferencia. hay que separarlos al chunkear.
+
+el lado bueno: **28 de esos 109 bloques discuten explicitamente versiones en conflicto** ("some
+say", "other writers", "according to some"). son un mapa de contradicciones escrito por un
+erudito, y citado como "riley, notas a ovidio" es una fuente legitima. el limite es que casi
+siempre citan autores que no estan en nuestro corpus (pausanias, diodoro, higino), asi que sirven
+para **encontrar** candidatos, no como los dos lados.
+
+### catalogo de contradicciones (en `eval/questions.json`)
+
+dos verificadas contra el texto, con los pasajes de cada lado copiados en el campo `passages`:
+
+| # | pregunta | las fuentes dicen |
+| --- | --- | --- |
+| 1 | ¿que contenia la jarra de pandora, males o bendiciones? | hesiodo dice males y que solo quedo la Esperanza. berens dice que eran las bendiciones reservadas a los hombres. **bulfinch recoge las dos y se inclina por la segunda** |
+| 2 | ¿quien era la madre de afrodita? | en hesiodo no tiene madre, nace de la espuma del mar. en la iliada, venus tiene por madre a dione |
+
+la primera es el mejor caso posible para la demo: es bulfinch, dentro del corpus, el que dice que
+hay dos versiones. la respuesta correcta del sistema no es escoger una, es reportar las dos.
+
+faltan 8 de conflicto, 10 de "directa" y 10 de "fuera". para verificarlas esta `search.py`:
+
+```bash
+python search.py pandora          # el contexto del termino en las ocho obras
+python search.py "foam-born" 2    # 2 coincidencias por fuente
+python search.py tiresias 3 600   # y 600 caracteres de contexto
+```
+
+cuando un termino **no** aparece en ninguna obra, lo dice: eso es justo lo que hay que confirmar
+para las preguntas del grupo "fuera".
+
 el corpus se baja a `data/` en la primera corrida y despues se lee del disco. `data/` e `index/`
 no estan en el repo porque se regeneran solos.
 

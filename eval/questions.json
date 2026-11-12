@@ -1,32 +1,53 @@
 {
   "_schema": {
-    "nota": "PLANTILLA. las 3 preguntas de abajo son ejemplos del formato, no preguntas finales: sus campos reference y expected_sources NO estan verificados contra el corpus. hay que reemplazarlas por 30 reales, 10 por grupo, 10 escritas por cada persona y revisadas en cruzado.",
+    "estado": "2 preguntas del grupo 'conflicto' VERIFICADAS contra el texto, con los pasajes copiados en `passages`. faltan 8 de conflicto, 10 de 'directa' y 10 de 'fuera'. los ejemplos marcados EJEMPLO son plantillas del formato, no preguntas finales.",
     "group": "directa | conflicto | fuera",
     "question": "la pregunta, en español",
     "reference": "la respuesta correcta segun el corpus, escrita a mano tras leer el pasaje. para el grupo 'fuera' va vacia.",
-    "expected_sources": "las obras donde esta el dato, como aparecen en corpus.SOURCES. para el grupo 'fuera' va vacia."
+    "expected_sources": "las obras donde esta el dato, como aparecen en corpus.SOURCES. para el grupo 'fuera' va vacia.",
+    "passages": "los pasajes verbatim que respaldan `reference`. son la evidencia de que la pregunta se verifico a mano.",
+    "como_verificar": "usar search.py para traer el contexto de un termino en las ocho obras, leer los dos lados y copiar los pasajes aqui. una pregunta de 'conflicto' sin passages de las dos fuentes NO esta verificada."
   },
   "questions": [
+    {
+      "id": "conflicto-01-pandora",
+      "group": "conflicto",
+      "question": "¿Que contenia la jarra que abrio Pandora: males o bendiciones?",
+      "reference": "Las fuentes se contradicen. Hesiodo dice que la jarra contenia males y que solo la Esperanza quedo dentro. Berens dice lo contrario: que contenia las bendiciones reservadas a la humanidad, que todas escaparon y que Pandora alcanzo a atrapar la Esperanza. Bulfinch recoge las dos versiones y se inclina por la de las bendiciones, argumentando que la Esperanza no podria haber estado guardada en una jarra llena de males.",
+      "expected_sources": ["hesiodo, himnos homericos y homerica", "myths and legends", "the age of fable"],
+      "passages": [
+        "Hesiodo (Trabajos y Dias, ll. 90-105): \"But the woman took off the great lid of the jar with her hands and scattered all these and her thought caused sorrow and mischief to men. Only Hope remained there in an unbreakable home within under the rim of the great jar, and did not fly out at the door [...] But the rest, countless plagues, wandered\"",
+        "Berens: \"a jar [...] containing all the blessings reserved by the gods for mankind [...] immediately all the blessings which the gods had thus reserved for mankind took wing and flew away. But all was not lost. Just as Hope (which lay at the bottom) was about to escape, Pandora hastily closed the lid of the jar\"",
+        "Bulfinch, version 1: \"Forthwith there escaped a multitude of plagues for hapless man [...] The whole contents of the jar had escaped, one thing only excepted, which lay at the bottom, and that was HOPE.\"",
+        "Bulfinch, version 2: \"Another story is, that Pandora was sent in good faith, by Jupiter, to bless man; that she was furnished with a box, containing her marriage presents, into which every god had put some blessing. She opened the box incautiously, and the blessings all escaped, HOPE only excepted. This story seems more consistent than the former\""
+      ]
+    },
+    {
+      "id": "conflicto-02-afrodita",
+      "group": "conflicto",
+      "question": "¿Quien era la madre de Afrodita?",
+      "reference": "Las fuentes se contradicen. En Hesiodo, Afrodita no tiene madre: nace de la espuma del mar que se formo alrededor de los miembros de Urano despues de que Crono lo mutilara. En la Iliada, en cambio, Venus tiene madre, y es Dione, que la atiende en el Olimpo cuando Diomedes la hiere.",
+      "expected_sources": ["hesiodo, himnos homericos y homerica", "iliada"],
+      "passages": [
+        "Hesiodo (Teogonia): \"he had cut off the members with flint and cast them from the land into the surging sea [...] and a white foam spread around them from the immortal flesh, and in it there grew a maiden [...] Her gods and men call Aphrodite, and the foam-born goddess\"",
+        "Homero (Iliada, libro V): \"Venus rescues AEneas, but being wounded by Diomed, commits him to the care of Apollo and goes to Olympus, where she is tended by her mother Dione\""
+      ]
+    },
     {
       "id": "ej-directa-01",
       "group": "directa",
       "question": "EJEMPLO: reemplazar por una pregunta cuya respuesta este en un solo pasaje del corpus",
       "reference": "",
-      "expected_sources": []
-    },
-    {
-      "id": "ej-conflicto-01",
-      "group": "conflicto",
-      "question": "EJEMPLO: reemplazar por una pregunta donde dos autores del corpus se contradigan, verificado a mano antes de usarla",
-      "reference": "",
-      "expected_sources": []
+      "expected_sources": [],
+      "passages": []
     },
     {
       "id": "ej-fuera-01",
       "group": "fuera",
       "question": "EJEMPLO: reemplazar por una pregunta plausible pero ajena al corpus, para ver si se abstiene o inventa",
       "reference": "",
-      "expected_sources": []
+      "expected_sources": [],
+      "passages": []
     }
   ]
 }
