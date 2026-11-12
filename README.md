@@ -196,7 +196,41 @@ la 5 es la mas fuerte de todas porque las fuentes no discrepan en un detalle: di
 era absirto**, un adulto al mando de una flota o un nino. eso no se puede promediar en una
 respuesta, hay que atribuirlo.
 
-faltan 5 de conflicto, 10 de "directa" y 10 de "fuera". para verificarlas esta `search.py`:
+### el grupo "fuera": las 10 listas, y son de dos clases
+
+el grupo que mas pesa en la demo esta completo y verificado. tiene **dos clases de pregunta**, y
+las dos hacen falta:
+
+**(a) entidad ausente** — el sujeto no esta en el corpus. el retrieval no trae nada relevante y el
+umbral lo atrapa. es el caso facil. van 8: hiperborea, mitra, arquimedes, tule, el demiurgo,
+gilgamesh, cuchulainn e ishtar.
+
+dos de esas son tramposas a proposito: **arquimedes**, porque el corpus si menciona a pitagoras
+(36 veces), platon (13) y eratostenes (11), asi que esperarlo es razonable; y **cuchulainn**,
+porque bulfinch si trae mitologia nordica (odin 29, thor 77), asi que esperar material celta
+tampoco es absurdo. el corpus es mucho mas ancho que "mitologia griega".
+
+**(b) dato ausente** — la entidad **si** esta y esta descrita en detalle, pero el dato puntual no.
+el retrieval trae chunks muy relevantes y el modelo queda tentado a completar. **esta es la clase
+que de verdad prueba la abstencion**, y es la que no se puede improvisar. van 2:
+
+| pregunta | por que esta verificada |
+| --- | --- |
+| ¿cuanto tardo hefesto en forjar el escudo de aquiles? | la iliada describe la forja en detalle, pero "vulcan" nunca aparece a menos de 400 caracteres de "days" ni de "hours" |
+| ¿cuantas colas tenia cerbero? | se habla de sus **cabezas** en 6 pasajes y de colas en **cero**. un modelo sin corpus suele responder con la cola de serpiente de otras tradiciones |
+
+### una leccion del metodo: contar palabras, no substrings
+
+el primer barrido dio "thor" 349 veces en las ocho obras, lo cual era imposible: estaba contando
+substrings y "thor" vive dentro de "author". por palabra completa son 77. igual "hera", que daba
+522 por "whereas" y "hereafter", y son 157.
+
+las parejas de la tabla de nombres de arriba aguantaron el cambio (heracles, hercules, odysseus,
+ulysses, zeus y jove varian entre 0 y 8 sobre cientos, porque son palabras distintivas), asi que
+esa conclusion se mantiene. pero **una pregunta del grupo "fuera" validada con substrings seria
+basura**, y `search.py` ya busca por palabra completa.
+
+faltan 5 de conflicto y 10 de "directa". para verificarlas esta `search.py`:
 
 ```bash
 python search.py pandora          # el contexto del termino en las ocho obras
@@ -271,6 +305,9 @@ los numeros de esta tabla.
 - [x] los ocho `gutenberg_id` verificados y el corpus descargado (952k tokens)
 - [x] `strip_boilerplate` y `normalize` corriendo sobre las ocho obras
 - [x] verificado que el corpus **si** se contradice (afrodita), que era el riesgo silencioso
+- [x] `search.py` para verificar preguntas a mano, buscando por palabra completa
+- [x] 5 preguntas de "conflicto" verificadas, con los pasajes de cada lado
+- [x] las 10 preguntas de "fuera" verificadas, en sus dos clases
 
 ### nucleo
 

@@ -9,33 +9,42 @@ del pipeline.
     python search.py hope 3 600           # y 600 caracteres de contexto
 """
 
+import re
 import sys
 import textwrap
 
 from corpus import SOURCES, load_corpus
 
 
+def _pattern(term: str) -> re.Pattern:
+    """busca por palabra completa, no por substring.
+
+    esto importa mas de lo que parece: contando substrings, "thor" aparece 349
+    veces en el corpus porque esta dentro de "author", y "hera" 522 porque esta
+    dentro de "whereas" y "hereafter". por palabra son 77 y 157. una pregunta
+    del grupo "fuera" validada con substrings seria basura.
+    """
+    return re.compile(r"\b" + re.escape(term) + r"\b", re.I)
+
+
 def search(term: str, per_source: int = 1, width: int = 420) -> None:
     term = term.lower()
+    pattern = _pattern(term)
     corpus = load_corpus(SOURCES)
 
     found = False
     for source, text in corpus.items():
         low = text.lower()
-        total = low.count(term)
+        total = len(pattern.findall(text))
         if not total:
             continue
         found = True
         print(f"### {source.author}/{source.work[:34]}  [{source.filename}]  ({total} veces)")
-        i = 0
-        for _ in range(per_source):
-            i = low.find(term, i)
-            if i == -1:
-                break
+        for match in list(pattern.finditer(text))[:per_source]:
+            i = match.start()
             snippet = " ".join(text[max(0, i - 120) : i + width].split())
             print(textwrap.fill(f"    ...{snippet}...", 112, subsequent_indent="    "))
             print()
-            i += len(term)
 
     if not found:
         print(f"'{term}' no aparece en ninguna de las {len(corpus)} obras.")
