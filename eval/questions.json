@@ -1,13 +1,13 @@
 {
   "_schema": {
-    "estado": "5 preguntas de 'conflicto' y 10 de 'fuera' VERIFICADAS. faltan 5 de conflicto y 10 de 'directa'.",
+    "estado": "5 de 'conflicto', 10 de 'fuera' y 10 de 'directa' VERIFICADAS contra el texto. faltan 5 de conflicto para cerrar las 30.",
     "group": "directa | conflicto | fuera",
     "question": "la pregunta, en español",
     "reference": "la respuesta correcta segun el corpus, escrita a mano tras leer el pasaje. para el grupo 'fuera' va vacia.",
     "expected_sources": "las obras donde esta el dato, como aparecen en corpus.SOURCES. para el grupo 'fuera' va vacia.",
     "passages": "los pasajes verbatim que respaldan `reference`. son la evidencia de que la pregunta se verifico a mano.",
     "como_verificar": "usar search.py para traer el contexto de un termino en las ocho obras, leer los dos lados y copiar los pasajes aqui. una pregunta de 'conflicto' sin passages de las dos fuentes NO esta verificada.",
-    "ojo": "NO citar como 'ovidio' los bloques EXPLANATION (notas de riley, s. XIX) ni como 'hesiodo' la introduccion de evelyn-white del #348. las dos cosas estan dentro de esos archivos y las dos producen citas falsas.",
+    "ojo": "NO citar como 'ovidio' ni los bloques EXPLANATION (notas de riley, s. XIX), ni los resumenes que encabezan cada libro, ni la sinopsis de un parrafo que va justo despues de cada 'FABLE N.'. el texto de ovidio empieza despues de esa sinopsis. tampoco citar como 'hesiodo' la introduccion de evelyn-white del #348. las cuatro cosas producen citas falsas.",
     "dos_tipos_de_fuera": "el grupo 'fuera' tiene dos clases y las dos hacen falta. (a) ENTIDAD AUSENTE: el sujeto no esta en el corpus; el retrieval no trae nada relevante y el umbral lo atrapa. es el caso facil. (b) DATO AUSENTE: la entidad SI esta y esta descrita en detalle, pero el dato puntual no; el retrieval trae chunks muy relevantes y el modelo queda tentado a inventar. ese es el caso que de verdad prueba la abstencion."
   },
   "questions": [
@@ -89,14 +89,6 @@
       ]
     },
     {
-      "id": "ej-directa-01",
-      "group": "directa",
-      "question": "EJEMPLO: reemplazar por una pregunta cuya respuesta este en un solo pasaje del corpus",
-      "reference": "",
-      "expected_sources": [],
-      "passages": []
-    },
-    {
       "id": "fuera-01-hyperborea",
       "group": "fuera",
       "question": "¿Que dice el corpus sobre Hiperborea?",
@@ -175,6 +167,126 @@
       "reference": "El corpus no lo dice. Se habla de sus cabezas (6 pasajes con 'cerberus' cerca de 'heads') pero nunca de colas (0 pasajes cerca de 'tails'). Tipo dato-ausente, y especialmente tramposa porque un modelo sin corpus suele responder con la cola de serpiente de otras tradiciones.",
       "expected_sources": [],
       "passages": []
+    },
+    {
+      "id": "directa-01-pandora-nombre",
+      "group": "directa",
+      "question": "¿Por que recibio Pandora ese nombre?",
+      "reference": "Porque todos los que habitaban el Olimpo le dieron un don cada uno.",
+      "expected_sources": [
+        "hesiodo, himnos homericos y homerica"
+      ],
+      "passages": [
+        "Hesiodo, Trabajos y Dias: \"And he called this woman Pandora, because all they who dwelt on Olympus gave each a gift, a plague to men who eat bread.\""
+      ]
+    },
+    {
+      "id": "directa-02-pandora-destinatario",
+      "group": "directa",
+      "question": "¿A quien le entregaron a Pandora?",
+      "reference": "A Epimeteo. Zeus se la envio como regalo por medio de Hermes, y Epimeteo la acepto olvidando la advertencia de Prometeo de no recibir nunca un regalo de Zeus.",
+      "expected_sources": [
+        "hesiodo, himnos homericos y homerica"
+      ],
+      "passages": [
+        "Hesiodo, Trabajos y Dias (ll. 83-89): \"the Father sent glorious Argos-Slayer, the swift messenger of the gods, to take it to Epimetheus as a gift. And Epimetheus did not think on what Prometheus had said to him, bidding him never take a gift of Olympian Zeus\""
+      ]
+    },
+    {
+      "id": "directa-03-afrodita-citerea",
+      "group": "directa",
+      "question": "¿Por que se le dice Citerea a Afrodita?",
+      "reference": "Porque llego a la isla de Citera. Hesiodo da las dos etimologias en el mismo pasaje: espumosa porque crecio entre la espuma, y Citerea porque alcanzo Citera.",
+      "expected_sources": [
+        "hesiodo, himnos homericos y homerica"
+      ],
+      "passages": [
+        "Hesiodo, Teogonia: \"Her gods and men call Aphrodite, and the foam-born goddess and rich-crowned Cytherea, because she grew amid the foam, and Cytherea because she reached Cythera\""
+      ]
+    },
+    {
+      "id": "directa-04-tiresias-entendimiento",
+      "group": "directa",
+      "question": "¿A quien le permitio Persefone conservar el entendimiento despues de muerto?",
+      "reference": "A Tiresias, el profeta ciego de Tebas. Es el unico; los demas espiritus vagan sin proposito.",
+      "expected_sources": [
+        "odisea"
+      ],
+      "passages": [
+        "Homero, Odisea: \"You must go to the house of Hades and of dread Proserpine to consult the ghost of the blind Theban prophet Teiresias, whose reason is still unshaken. To him alone has Proserpine left his understanding even in death, but the other ghosts flit about aimlessly.\""
+      ]
+    },
+    {
+      "id": "directa-05-argo-constructor",
+      "group": "directa",
+      "question": "¿Quien construyo la nave Argo?",
+      "reference": "Argos la construyo, guiado por Atenea.",
+      "expected_sources": [
+        "argonautica"
+      ],
+      "passages": [
+        "Apolonio, Argonautica (libro I): \"The ship, as former bards relate, Argus wrought by the guidance of Athena.\""
+      ]
+    },
+    {
+      "id": "directa-06-caballos-aquiles",
+      "group": "directa",
+      "question": "¿Como se llamaban los caballos de Aquiles y de quien nacieron?",
+      "reference": "Janto y Balio. Los engendro la harpia Podarge con el viento del oeste, mientras pastaba en un prado.",
+      "expected_sources": [
+        "iliada"
+      ],
+      "passages": [
+        "Homero, Iliada: \"Automedon therefore yoked the fleet horses Xanthus and Balius, steeds that could fly like the wind: these were they whom the harpy Podarge bore to the west wind, as she was grazing in a meadow\""
+      ]
+    },
+    {
+      "id": "directa-07-ovidio-caos",
+      "group": "directa",
+      "question": "Segun Ovidio, ¿que habia antes de que el mundo tomara forma?",
+      "reference": "El Caos: una masa ruda y sin digerir, un peso inerte donde los atomos discordantes no armonizaban. No habia Sol que diera luz ni Luna que recobrara sus cuernos, y la Tierra no pendia aun en el aire.",
+      "expected_sources": [
+        "metamorfosis"
+      ],
+      "passages": [
+        "Ovidio, Metamorfosis (libro I, fabula I [I.5-31]): \"At first, the sea, the earth, and the heaven, which covers all things, were the only face of nature throughout the whole universe, which men have named Chaos; a rude and undigested mass, and nothing more than an inert weight, and the discordant atoms of things not harmonizing, heaped together in the same spot.\""
+      ]
+    },
+    {
+      "id": "directa-08-hefesto-rescate",
+      "group": "directa",
+      "question": "¿Quienes rescataron a Hefesto cuando cayo al mar, y cuanto tiempo lo cuidaron?",
+      "reference": "Las ninfas marinas Tetis y Eurinome, que lo tuvieron nueve anos en una cueva bajo el oceano. En agradecimiento les hizo varios ornamentos y joyas de raro trabajo.",
+      "expected_sources": [
+        "myths and legends"
+      ],
+      "passages": [
+        "Berens: \"he fell into the sea, and was saved by the sea-nymphs Thetis and Eurynome, who kept him for nine years in a cavern beneath the ocean, where he made for them, in gratitude for their kindness, several beautiful ornaments, and trinkets of rare workmanship.\""
+      ]
+    },
+    {
+      "id": "directa-09-adonis-reparto",
+      "group": "directa",
+      "question": "¿Como reparcio Zeus el ano de Adonis?",
+      "reference": "En tres partes de cuatro meses: cuatro con Persefone, cuatro con Afrodita y cuatro a su propia disposicion. Adonis acabo dedicandole voluntariamente a Afrodita el tiempo libre.",
+      "expected_sources": [
+        "myths and legends"
+      ],
+      "passages": [
+        "Berens: \"Zeus, being appealed to by the rival foster-mothers, decided that Adonis should spend four months of every year with Persephone, four with Aphrodite, whilst during the remaining four months he should be left to his own devices.\""
+      ]
+    },
+    {
+      "id": "directa-10-venus-vulcano",
+      "group": "directa",
+      "question": "¿Por que le dio Jupiter a Venus por esposa a Vulcano?",
+      "reference": "En agradecimiento por el servicio que Vulcano le habia prestado forjandole los rayos.",
+      "expected_sources": [
+        "the age of fable"
+      ],
+      "passages": [
+        "Bulfinch: \"All were charmed with her beauty, and each one demanded her for his wife. Jupiter gave her to Vulcan, in gratitude for the service he had rendered in forging thunderbolts.\""
+      ]
     }
   ]
 }

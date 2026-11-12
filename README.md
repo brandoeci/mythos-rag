@@ -163,11 +163,20 @@ esto define el `locator` de la tarea 3 de hildebrando. son cuatro formatos disti
 latinos entre corchetes, asi que la cita puede apuntar al verso y no solo al libro. es el locator
 mas preciso del corpus y conviene aprovecharlo en la demo.
 
-**pero el mismo archivo trae una trampa:** la edicion de riley **alterna el poema con el
-comentario de riley**, del siglo XIX. la estructura es `FABLE N. [refs]` para el texto de ovidio y
-`EXPLANATION.` para la nota. son 109 bloques de nota entre los dos tomos. si un chunk de una nota
-entra al indice, el sistema lo citara como "ovidio, metamorfosis" y sera una cita falsa de
-diecinueve siglos de diferencia. hay que separarlos al chunkear.
+**pero el mismo archivo trae una trampa, y son cuatro capas:** de todo lo que hay en los dos tomos
+de ovidio, **solo una parte es ovidio**. hay que separar al chunkear:
+
+| capa | que es | ¿citable como ovidio? |
+| --- | --- | --- |
+| resumen que encabeza cada libro | sinopsis editorial en presente | **no** |
+| `FABLE N. [refs]` | el encabezado, con el rango de versos | es el locator |
+| la sinopsis de un parrafo justo despues del encabezado | ej. *"God reduces Chaos into order"* | **no** |
+| el texto que sigue a esa sinopsis | la traduccion de riley del verso | **si** |
+| `EXPLANATION.` | nota de riley, siglo XIX. 109 bloques | **no** |
+
+caer en esto es facil: buscando un pasaje de la creacion para una pregunta, lo primero que
+devuelve la busqueda es el resumen del libro y no el verso. un chunk de esas capas citado como
+"ovidio, metamorfosis" es una cita falsa de diecinueve siglos.
 
 el lado bueno: **28 de esos 109 bloques discuten explicitamente versiones en conflicto** ("some
 say", "other writers", "according to some"). son un mapa de contradicciones escrito por un
@@ -230,7 +239,14 @@ ulysses, zeus y jove varian entre 0 y 8 sobre cientos, porque son palabras disti
 esa conclusion se mantiene. pero **una pregunta del grupo "fuera" validada con substrings seria
 basura**, y `search.py` ya busca por palabra completa.
 
-faltan 5 de conflicto y 10 de "directa". para verificarlas esta `search.py`:
+### el grupo "directa": las 10 listas
+
+diez preguntas con su pasaje y su fuente, repartidas entre las siete obras: hesiodo (3), berens
+(2), bulfinch (1), iliada (1), odisea (1), argonautica (1) y ovidio (1). el nombre de los caballos
+de aquiles y de quien nacieron, quien construyo el argo, por que pandora se llama asi, a quien le
+dejo persefone el entendimiento en la muerte, como repartio zeus el ano de adonis.
+
+**van 25 de las 30.** faltan 5 de conflicto. para verificarlas esta `search.py`:
 
 ```bash
 python search.py pandora          # el contexto del termino en las ocho obras
@@ -308,6 +324,8 @@ los numeros de esta tabla.
 - [x] `search.py` para verificar preguntas a mano, buscando por palabra completa
 - [x] 5 preguntas de "conflicto" verificadas, con los pasajes de cada lado
 - [x] las 10 preguntas de "fuera" verificadas, en sus dos clases
+- [x] las 10 preguntas de "directa" verificadas, con el pasaje y la fuente de cada una
+- [x] **25 de las 30 preguntas listas**; faltan 5 de conflicto
 
 ### nucleo
 
@@ -364,6 +382,13 @@ cambio rompe los otros dos modulos.
    autores, asi que hay chunks que dicen lo mismo. sin dedup, el retrieval
    devuelve cinco veces el mismo hecho y tapa a la fuente que lo contradice:
    eso mata la pieza de conflictos, que es la del proyecto.
+   **ya esta comprobado**, y de la forma mas cruda: el relato de la creacion de
+   bulfinch es ovidio casi palabra por palabra. ovidio dice *"a rude and
+   undigested mass, and nothing more than an inert weight, and the discordant
+   atoms of things not harmonizing"*; bulfinch, *"a rough heap of inert weight
+   and discordant beginnings of things clashing together"*, y lo admite en la
+   linea anterior: *"The Roman poet Ovid gives us a connected narrative of
+   creation"*.
    *asegurar:* medir cuantos pares pasan de 0.95 de similitud, decidir que se
    hace con ellos y dejar la decision escrita.
 6. **chroma con embeddings locales, persistido en `index/`.**
