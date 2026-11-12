@@ -1,0 +1,32 @@
+{
+  "_schema": {
+    "nota": "PLANTILLA. las 3 preguntas de abajo son ejemplos del formato, no preguntas finales: sus campos reference y expected_sources NO estan verificados contra el corpus. hay que reemplazarlas por 30 reales, 10 por grupo, 10 escritas por cada persona y revisadas en cruzado.",
+    "group": "directa | conflicto | fuera",
+    "question": "la pregunta, en español",
+    "reference": "la respuesta correcta segun el corpus, escrita a mano tras leer el pasaje. para el grupo 'fuera' va vacia.",
+    "expected_sources": "las obras donde esta el dato, como aparecen en corpus.SOURCES. para el grupo 'fuera' va vacia."
+  },
+  "questions": [
+    {
+      "id": "ej-directa-01",
+      "group": "directa",
+      "question": "EJEMPLO: reemplazar por una pregunta cuya respuesta este en un solo pasaje del corpus",
+      "reference": "",
+      "expected_sources": []
+    },
+    {
+      "id": "ej-conflicto-01",
+      "group": "conflicto",
+      "question": "EJEMPLO: reemplazar por una pregunta donde dos autores del corpus se contradigan, verificado a mano antes de usarla",
+      "reference": "",
+      "expected_sources": []
+    },
+    {
+      "id": "ej-fuera-01",
+      "group": "fuera",
+      "question": "EJEMPLO: reemplazar por una pregunta plausible pero ajena al corpus, para ver si se abstiene o inventa",
+      "reference": "",
+      "expected_sources": []
+    }
+  ]
+}

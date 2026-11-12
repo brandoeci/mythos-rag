@@ -143,6 +143,13 @@ los numeros de esta tabla.
 
 ## estado del proyecto
 
+### listo
+
+- [x] repo, readme y contrato de `answer()` definido
+- [x] esqueleto de los cinco modulos, con firmas, tipos y docstrings
+- [x] modo stub: `app.py` y `evaluate.py` corren sin que el pipeline exista
+- [x] `proyecto.ipynb` con las secciones de la plantilla del curso
+
 ### nucleo
 
 - [ ] corpus multi-fuente indexado, cada chunk con autor/obra/libro
@@ -202,15 +209,28 @@ tiene nada que mostrar. se chequea a mano, en media hora.
 
 ## como correrlo
 
-todavia no hay nada que correr. cuando lo haya:
-
 ```bash
 python -m venv .venv
 source .venv/bin/activate        # windows: .venv\Scripts\activate
 pip install -r requirements.txt
 cp .env.example .env             # y poner la api key de gemini
-python app.py
 ```
+
+el pipeline todavia no existe, pero **el esqueleto corre en modo stub**: con
+`rag.STUB = True` (el default), `rag.answer()` devuelve datos falsos con la
+forma definitiva.
+
+```bash
+python app.py        # la interfaz, funcionando contra el stub
+```
+
+eso es a proposito. persona c construye y prueba la interfaz y el arnes de
+evaluacion desde hoy, sin esperar a que persona b termine el pipeline. cuando
+los nodos esten listos se pone `rag.STUB = False` y nada mas cambia.
+
+lo que falta implementar esta marcado con `raise NotImplementedError("persona
+x")` en cada modulo, asi que `grep -rn NotImplementedError` da la lista de
+pendientes con su dueño.
 
 ## licencia del corpus
 
