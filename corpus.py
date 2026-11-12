@@ -27,6 +27,12 @@ class Source:
     filename: str
     translation: str  # cual traduccion es. dos traducciones dan textos distintos
 
+    # si el archivo trae **varias** obras, `author` y `work` de aqui no sirven
+    # para citar: hay que sacarlos del encabezado de cada seccion al chunkear.
+    # mientras eso no este implementado, esta fuente NO se indexa, porque
+    # produciria citas falsas.
+    is_collection: bool = False
+
     @property
     def url(self) -> str:
         return f"https://www.gutenberg.org/cache/epub/{self.gutenberg_id}/pg{self.gutenberg_id}.txt"
@@ -45,7 +51,19 @@ class Source:
 # medea) y el compendio de berens, que cuenta los mismos mitos que bulfinch y
 # por eso choca con el en los detalles.
 SOURCES: list[Source] = [
-    Source("hesiodo", "teogonia", 348, "hesiodo.txt", "Evelyn-White, Loeb 1914"),
+    # OJO: el #348 no es solo la Teogonia. el archivo trae unas treinta obras:
+    # los Trabajos y Dias, la Teogonia, el Escudo de Heracles, los Catalogos de
+    # Mujeres, **los Himnos Homericos** (que son de homero, no de hesiodo) y los
+    # fragmentos del Ciclo Epico. citarlo entero como "hesiodo, teogonia" seria
+    # una cita falsa, que es exactamente lo que el proyecto dice evitar.
+    Source(
+        "varios",
+        "hesiodo, himnos homericos y homerica",
+        348,
+        "hesiodo.txt",
+        "Evelyn-White, Loeb 1914",
+        is_collection=True,
+    ),
     Source("homero", "iliada", 2199, "iliada.txt", "Samuel Butler, prosa"),
     Source("homero", "odisea", 1727, "odisea.txt", "Samuel Butler, prosa"),
     Source("apolonio", "argonautica", 830, "argonautica.txt", "R. C. Seaton, 1912"),

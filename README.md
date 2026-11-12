@@ -130,6 +130,30 @@ y notese que cruza justo la division del punto 1: una dice "aphrodite" y la otra
 (1 "gutenberg" cada uno). son pocos pero hay que sacarlos: si un chunk de esos entra al indice, el
 sistema puede citar una nota del transcriptor como si fuera homero.
 
+**4. el #348 no es la Teogonia: es una antologia de unas treinta obras.** trae los Trabajos y
+Dias, la Teogonia, el Escudo de Heracles, los Catalogos de Mujeres, los **Himnos Homericos** (que
+son de homero, no de hesiodo) y los fragmentos del Ciclo Epico. citar el archivo entero como
+"hesiodo, teogonia" produciria **citas falsas**, que es justo lo que el proyecto promete evitar.
+queda marcado con `is_collection=True` y **no se indexa** hasta que `chunk_document` saque autor y
+obra del encabezado de cada seccion.
+
+### formato de los encabezados, obra por obra
+
+esto define el `locator` de la tarea 3 de hildebrando. son cuatro formatos distintos, no uno:
+
+| obra | encabezado | locator propuesto |
+| --- | --- | --- |
+| iliada, odisea | `BOOK I.` (24 y 24 libros) | `libro xii` |
+| argonautica | `BOOK I` sin punto (4 libros) | `libro iii` |
+| bulfinch | `Chapter I` | `capitulo xv` |
+| berens | `PART I.--MYTHS.` + titulo de seccion | `parte i, las sirenas` |
+| ovidio | `BOOK THE FIRST.` **y** `FABLE I. [I.89-112]` | `libro i, fabula iii [i.89-112]` |
+| #348 (antologia) | titulo de obra en mayusculas | hay que sacar autor y obra de ahi |
+
+**ovidio es un regalo para las citas:** los 126 encabezados de fabula traen el rango de versos
+latinos entre corchetes, asi que la cita puede apuntar al verso y no solo al libro. es el locator
+mas preciso del corpus y conviene aprovecharlo en la demo.
+
 el corpus se baja a `data/` en la primera corrida y despues se lee del disco. `data/` e `index/`
 no estan en el repo porque se regeneran solos.
 
