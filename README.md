@@ -186,24 +186,40 @@ para **encontrar** candidatos, no como los dos lados.
 
 ### catalogo de contradicciones (en `eval/questions.json`)
 
-**cinco verificadas** contra el texto, con los pasajes de cada lado copiados en el campo
-`passages`. los tres ejes productivos resultaron ser estos, y las cinco salieron de ahi:
+**las 10 verificadas**, con los pasajes de cada lado en el campo `passages`. y resultaron de tres
+clases distintas, lo cual es mejor que diez de la misma:
 
-| # | pregunta | las fuentes dicen | eje |
-| --- | --- | --- | --- |
-| 1 | ¿que contenia la jarra de pandora, males o bendiciones? | hesiodo dice males y que solo quedo la Esperanza. berens dice que eran las bendiciones reservadas a los hombres. **bulfinch recoge las dos y se inclina por la segunda** | hesiodo vs compendios |
-| 2 | ¿quien era la madre de afrodita? | en hesiodo no tiene madre, nace de la espuma. en la iliada es dione. **bulfinch enuncia las dos** | hesiodo vs homero |
-| 3 | ¿de quien era hijo eros? | en la teogonia no tiene padres, es uno de los primeros seres junto al caos y la tierra. en berens es hijo de afrodita | cosmogonico |
-| 4 | ¿quien era la esposa de hefesto? | bulfinch dice venus, "la mas hermosa de las diosas con el mas feo de los dioses". berens anota que segun algunos relatos era charis | bulfinch vs berens |
-| 5 | ¿como murio absirto, el hermano de medea? | en apolonio y berens es un **adulto** que comanda la flota perseguidora y muere en una emboscada de jason. en bulfinch es un **nino** que medea se lleva y manda matar, esparciendo sus miembros por el mar | apolonio vs bulfinch |
+**(a) dos autores que discrepan** — el caso esperado:
 
-la 1 y la 5 son los mejores casos para la demo: en las dos es **una fuente del corpus** la que
-dice que hay otra version ("Another story is...", "There is another story..."). el ground truth no
-se discute, y la respuesta correcta del sistema no es escoger una, es reportar las dos.
+| pregunta | las fuentes dicen |
+| --- | --- |
+| ¿que contenia la jarra de pandora? | hesiodo dice males. berens dice bendiciones. **bulfinch recoge las dos y se inclina por la segunda** |
+| ¿quien era la madre de afrodita? | en hesiodo no tiene, nace de la espuma. en la iliada es dione. **bulfinch enuncia las dos** |
+| ¿de quien era hijo eros? | en la teogonia no tiene padres, es de los primeros seres. en berens es hijo de afrodita |
+| ¿quien era la esposa de hefesto? | bulfinch dice venus. berens anota que segun algunos relatos era charis |
+| ¿como murio absirto? | en apolonio y berens es un **adulto** al mando de la flota perseguidora. en bulfinch es un **nino** al que medea manda matar |
+| ¿hefesto tuvo padre? | en la teogonia hera lo pario sin union con zeus. berens y bulfinch lo hacen hijo de los dos |
+| ¿quien creo a la humanidad? | en hesiodo los dioses del olimpo hicieron una raza de oro. en bulfinch fue prometeo |
+| ¿que habia al principio del mundo? | en hesiodo el caos es un ser que engendra a erebo y la noche. en ovidio el caos no engendra nada, es el nombre del desorden que un dios separa |
 
-la 5 es la mas fuerte de todas porque las fuentes no discrepan en un detalle: discrepan en **quien
-era absirto**, un adulto al mando de una flota o un nino. eso no se puede promediar en una
-respuesta, hay que atribuirlo.
+**(b) una misma obra que se contradice a si misma** — la iliada, y es la mas vistosa:
+
+| pregunta | que pasa |
+| --- | --- |
+| ¿quien arrojo a hefesto del olimpo y quien lo recogio? | en el **libro I** hefesto dice que fue zeus, que cayo en lemnos y lo atendieron los sintios. en el **libro XVIII** dice que fue su madre y que lo recogieron eurinome y tetis en una cueva del oceano |
+
+no es que dos autores discrepen: es el mismo personaje contando su propia caida de dos maneras en
+el mismo poema. eso no se resuelve escogiendo la fuente mas confiable.
+
+**(c) dos personajes distintos con el mismo nombre** — el riesgo no es la discrepancia sino la
+fusion:
+
+| pregunta | que pasa |
+| --- | --- |
+| ¿quien era escila? | en la odisea es un monstruo marino de seis cabezas, hija de crateis. en ovidio es la hija del rey niso de megara, que le corta el mechon a su padre por amor a minos y acaba convertida en ave |
+
+si el sistema las junta en una sola respuesta, produce algo coherente y completamente falso. es un
+modo de fallo distinto de los otros dos y conviene tenerlo medido.
 
 ### el grupo "fuera": las 10 listas, y son de dos clases
 
@@ -246,7 +262,7 @@ diez preguntas con su pasaje y su fuente, repartidas entre las siete obras: hesi
 de aquiles y de quien nacieron, quien construyo el argo, por que pandora se llama asi, a quien le
 dejo persefone el entendimiento en la muerte, como repartio zeus el ano de adonis.
 
-**van 25 de las 30.** faltan 5 de conflicto. para verificarlas esta `search.py`:
+**las 30 estan listas.** la herramienta con la que se verificaron es `search.py`:
 
 ```bash
 python search.py pandora          # el contexto del termino en las ocho obras
@@ -325,7 +341,7 @@ los numeros de esta tabla.
 - [x] 5 preguntas de "conflicto" verificadas, con los pasajes de cada lado
 - [x] las 10 preguntas de "fuera" verificadas, en sus dos clases
 - [x] las 10 preguntas de "directa" verificadas, con el pasaje y la fuente de cada una
-- [x] **25 de las 30 preguntas listas**; faltan 5 de conflicto
+- [x] **las 30 preguntas listas y verificadas**, 10 por grupo
 
 ### nucleo
 

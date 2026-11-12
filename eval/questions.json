@@ -1,6 +1,6 @@
 {
   "_schema": {
-    "estado": "5 de 'conflicto', 10 de 'fuera' y 10 de 'directa' VERIFICADAS contra el texto. faltan 5 de conflicto para cerrar las 30.",
+    "estado": "las 30 preguntas VERIFICADAS contra el texto: 10 directa, 10 conflicto, 10 fuera.",
     "group": "directa | conflicto | fuera",
     "question": "la pregunta, en español",
     "reference": "la respuesta correcta segun el corpus, escrita a mano tras leer el pasaje. para el grupo 'fuera' va vacia.",
@@ -8,7 +8,8 @@
     "passages": "los pasajes verbatim que respaldan `reference`. son la evidencia de que la pregunta se verifico a mano.",
     "como_verificar": "usar search.py para traer el contexto de un termino en las ocho obras, leer los dos lados y copiar los pasajes aqui. una pregunta de 'conflicto' sin passages de las dos fuentes NO esta verificada.",
     "ojo": "NO citar como 'ovidio' ni los bloques EXPLANATION (notas de riley, s. XIX), ni los resumenes que encabezan cada libro, ni la sinopsis de un parrafo que va justo despues de cada 'FABLE N.'. el texto de ovidio empieza despues de esa sinopsis. tampoco citar como 'hesiodo' la introduccion de evelyn-white del #348. las cuatro cosas producen citas falsas.",
-    "dos_tipos_de_fuera": "el grupo 'fuera' tiene dos clases y las dos hacen falta. (a) ENTIDAD AUSENTE: el sujeto no esta en el corpus; el retrieval no trae nada relevante y el umbral lo atrapa. es el caso facil. (b) DATO AUSENTE: la entidad SI esta y esta descrita en detalle, pero el dato puntual no; el retrieval trae chunks muy relevantes y el modelo queda tentado a inventar. ese es el caso que de verdad prueba la abstencion."
+    "dos_tipos_de_fuera": "el grupo 'fuera' tiene dos clases y las dos hacen falta. (a) ENTIDAD AUSENTE: el sujeto no esta en el corpus; el retrieval no trae nada relevante y el umbral lo atrapa. es el caso facil. (b) DATO AUSENTE: la entidad SI esta y esta descrita en detalle, pero el dato puntual no; el retrieval trae chunks muy relevantes y el modelo queda tentado a inventar. ese es el caso que de verdad prueba la abstencion.",
+    "clases_de_conflicto": "no todas las contradicciones son del mismo tipo, y conviene que el set tenga de los tres: (a) dos autores que discrepan, (b) UNA MISMA obra que se contradice a si misma (ver conflicto-06, la Iliada), (c) dos personajes DISTINTOS con el mismo nombre, que el sistema puede fusionar en una respuesta falsa (ver conflicto-10, las dos Escilas)."
   },
   "questions": [
     {
@@ -286,6 +287,77 @@
       ],
       "passages": [
         "Bulfinch: \"All were charmed with her beauty, and each one demanded her for his wife. Jupiter gave her to Vulcan, in gratitude for the service he had rendered in forging thunderbolts.\""
+      ]
+    },
+    {
+      "id": "conflicto-06-caida-hefesto",
+      "group": "conflicto",
+      "question": "¿Quien arrojo a Hefesto del Olimpo y quien lo recogio?",
+      "reference": "La Iliada se contradice a si misma. En el libro I, Hefesto cuenta que fue Zeus quien lo agarro del pie y lo lanzo, que cayo todo el dia hasta Lemnos y que alli lo atendieron los sintios. En el libro XVIII cuenta que fue su madre la que quiso deshacerse de el por ser cojo, y que lo recogieron Eurinome y Tetis, con quienes paso nueve anos en una cueva del Oceano.",
+      "expected_sources": [
+        "iliada"
+      ],
+      "passages": [
+        "Homero, Iliada (libro I): \"Once before when I was trying to help you, he caught me by the foot and flung me from the heavenly threshold. All day long from morn till eve, was I falling, till at sunset I came to ground in the island of Lemnos, and there I lay, with very little life left in me, till the Sintians came and tended me.\"",
+        "Homero, Iliada (libro XVIII): \"she it was that took care of me when I was suffering from the heavy fall which I had through my cruel mother's anger - for she would have got rid of me because I was lame. It would have gone hardly with me had not Eurynome, daughter of the ever-encircling waters of Oceanus, and Thetis, taken me to their bosom. Nine years did I stay with them\""
+      ]
+    },
+    {
+      "id": "conflicto-07-padre-hefesto",
+      "group": "conflicto",
+      "question": "¿Hefesto tuvo padre?",
+      "reference": "Las fuentes se contradicen. En la Teogonia de Hesiodo, Hera lo pario sin union con Zeus, por despecho tras pelear con su marido: Hefesto no tiene padre. Berens y Bulfinch, en cambio, lo presentan como hijo de los dos.",
+      "expected_sources": [
+        "hesiodo, himnos homericos y homerica",
+        "myths and legends",
+        "the age of fable"
+      ],
+      "passages": [
+        "Hesiodo, Teogonia (ll. 924-929): \"But Hera without union with Zeus - for she was very angry and quarrelled with her mate - bare famous Hephaestus, who is skilled in crafts more than all the sons of Heaven.\"",
+        "Berens: \"HEPHAESTUS (VULCAN). Hephaestus, the son of Zeus and Hera, was the god of fire in its beneficial aspect\"",
+        "Bulfinch: \"Vulcan (Hephaistos), the celestial artist, was the son of Jupiter and Juno.\""
+      ]
+    },
+    {
+      "id": "conflicto-08-creacion-hombre",
+      "group": "conflicto",
+      "question": "¿Quien creo a la humanidad?",
+      "reference": "Las fuentes se contradicen. En Hesiodo fueron los dioses del Olimpo en conjunto los que hicieron una raza de oro de hombres mortales, en tiempos de Cronos. En Bulfinch fue Prometeo: Deucalion lo llama \"nuestro antepasado\" y dice que ojala tuvieran su poder para rehacer la raza como el la hizo al principio.",
+      "expected_sources": [
+        "hesiodo, himnos homericos y homerica",
+        "the age of fable"
+      ],
+      "passages": [
+        "Hesiodo, Trabajos y Dias (ll. 109-120): \"First of all the deathless gods who dwell on Olympus made a golden race of mortal men who lived in the time of Cronos when he was reigning in heaven.\"",
+        "Bulfinch: \"would that we possessed the power of our ancestor Prometheus, and could renew the race as he at first made it!\""
+      ]
+    },
+    {
+      "id": "conflicto-09-principio-del-mundo",
+      "group": "conflicto",
+      "question": "¿Que habia al principio del mundo?",
+      "reference": "Las dos cosmogonias no coinciden. En Hesiodo el Caos es un ser que llega a existir primero, y despues la Tierra, el Tartaro y Eros; de ese Caos nacen luego Erebo y la Noche. En Ovidio el Caos no engendra nada: es el nombre que los hombres le dieron al estado desordenado en que ya estaban el mar, la tierra y el cielo, una masa inerte que un dios despues separa.",
+      "expected_sources": [
+        "hesiodo, himnos homericos y homerica",
+        "metamorfosis"
+      ],
+      "passages": [
+        "Hesiodo, Teogonia (ll. 116-138): \"Verily at the first Chaos came to be, but next wide-bosomed Earth [...] and dim Tartarus in the depth of the wide-pathed Earth, and Eros (Love), fairest among the deathless gods [...] From Chaos came forth Erebus and black Night\"",
+        "Ovidio, Metamorfosis (libro I, fabula I [I.5-31]): \"At first, the sea, the earth, and the heaven, which covers all things, were the only face of nature throughout the whole universe, which men have named Chaos; a rude and undigested mass, and nothing more than an inert weight\""
+      ]
+    },
+    {
+      "id": "conflicto-10-dos-escilas",
+      "group": "conflicto",
+      "question": "¿Quien era Escila?",
+      "reference": "Son dos personajes distintos con el mismo nombre, y el riesgo no es que las fuentes discrepen sino que el sistema las fusione en una sola respuesta falsa. En la Odisea, Escila es un monstruo marino de seis cabezas, hija de Crateis. En Ovidio es la hija del rey Niso de Megara, que por amor a Minos le corta a su padre el mechon del que dependia la ciudad, y acaba convertida en ave. La respuesta correcta distingue las dos.",
+      "expected_sources": [
+        "odisea",
+        "metamorfosis"
+      ],
+      "passages": [
+        "Homero, Odisea: \"she may catch you with a second cast of her six heads, and snap up another half dozen of your men; so drive your ship past her at full speed, and roar out lustily to Crataiis who is Scylla's dam\"",
+        "Ovidio, Metamorfosis (libro VIII, fabula I [VIII.1-151]): \"'Twas love that urged the deed. I am Scylla, the royal issue of Nisus; to thee do I deliver the fortunes of my country and my own, as well; I ask for no reward, but thyself. Take this purple lock, as a pledge of my love; and do not consider that I am delivering to thee a lock of hair, but the life of my father.\""
       ]
     }
   ]
