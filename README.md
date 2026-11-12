@@ -86,19 +86,63 @@ ids verificados y descargados. **952.000 tokens en total**, ocho veces el corpus
 
 | autor | obra | id | traduccion | tokens | parrafos |
 | --- | --- | --- | --- | --- | --- |
-| hesiodo | teogonia | 348 | Evelyn-White, Loeb 1914 | 90.815 | 8.225 |
-| homero | iliada | 2199 | Samuel Butler, prosa | 152.757 | 13.292 |
-| homero | odisea | 1727 | Samuel Butler, prosa | 129.571 | 10.397 |
-| apolonio | argonautica | 830 | R. C. Seaton, 1912 | 61.281 | 5.019 |
-| ovidio | metamorfosis i-vii | 21765 | Henry T. Riley, prosa | 125.333 | 11.392 |
-| ovidio | metamorfosis viii-xv | 26073 | Henry T. Riley, prosa | 139.460 | 12.461 |
-| bulfinch | the age of fable | 3327 | edicion de 1913 | 145.933 | 14.584 |
-| berens | myths and legends | 22381 | edicion de 1894 | 106.475 | 10.210 |
+| varios | antologia (ver abajo) | 348 | Evelyn-White, Loeb 1914 | 90.815 | 1.595 |
+| homero | iliada | 2199 | Samuel Butler, prosa | 152.757 | 1.166 |
+| homero | odisea | 1727 | Samuel Butler, prosa | 129.571 | 1.321 |
+| apolonio | argonautica | 830 | R. C. Seaton, 1912 | 61.281 | 490 |
+| ovidio | metamorfosis i-vii | 21765 | Henry T. Riley, prosa | 125.333 | 1.445 |
+| ovidio | metamorfosis viii-xv | 26073 | Henry T. Riley, prosa | 139.460 | 1.404 |
+| bulfinch | the age of fable | 3327 | edicion de 1913 | 145.933 | 1.624 |
+| berens | myths and legends | 22381 | edicion de 1894 | 106.475 | 1.606 |
 
 **apolodoro quedo fuera: la Biblioteca no esta en gutenberg.** era una de las fuentes primarias
 que queriamos. se reemplaza por la Argonautica de apolonio (primaria, da su propia version de
 jason y medea) y el compendio de berens, que cuenta los mismos mitos que bulfinch y choca con el
 en los detalles.
+
+> **corregido:** la columna de parrafos decia antes 8.225, 13.292, etc. esos eran **conteos de
+> linea**: los ocho archivos vienen a doble espacio, con una linea en blanco entre cada linea y dos
+> entre parrafos. medido en la iliada, 12.388 rachas de dos saltos contra 1.165 de cuatro. partir
+> por `
+
+` daba "parrafos" de 63 caracteres de mediana y **rompia las frases**: buscar "fairest
+> among the deathless gods" no encontraba nada porque la frase cruzaba un salto. `normalize()` ya
+> parte por rachas de tres o mas.
+
+### atribucion: de texto crudo a secciones citables
+
+`corpus.iter_sections()` convierte cada obra en **secciones con autor, obra y locator resueltos**.
+es lo que `index.chunk_document` debe consumir; el texto crudo nunca, porque trae prefacios, notas
+y, en el #348, obras de otros autores.
+
+| obra | secciones | palabras citables | del total | ejemplo de locator |
+| --- | --- | --- | --- | --- |
+| #348 (antologia) | 62 | 72.756 | 80% | `the theogony`, `xix. to pan` |
+| iliada | 24 | 152.639 | 100% | `libro xiii` |
+| odisea | 24 | 126.689 | 98% | `libro xiii` |
+| argonautica | 4 | 59.580 | 97% | `libro iii` |
+| ovidio i-vii | 70 | 65.138 | 52% | `libro iii, fabula vi [III.339-401]` |
+| ovidio viii-xv | 42 | 54.999 | 39% | `libro x, fabula ix [X.519-707]` |
+| the age of fable | 57 | 145.799 | 100% | `capitulo vi` |
+| myths and legends | 166 | 106.001 | 100% | `oceanides`, `the sirens` |
+| **total** | **449** | **783.601** | **82%** | |
+
+el 18% que se cae es justo lo que produciria citas falsas: el estudio de evelyn-white, los
+prefacios, las 109 notas de riley, las sinopsis por fabula y los indices. en ovidio se cae casi la
+mitad del archivo, y esta bien que se caiga.
+
+la antologia quedo partida en 62 obras con su autor resuelto: 3 de hesiodo con atribucion firme
+(Trabajos y Dias, Teogonia, Escudo de Heracles), 13 atribuidas, 32 himnos y epigramas de "homero
+(atribuido)", 10 fragmentos del ciclo epico y 3 anonimos. se marca "(atribuido)" donde la propia
+edicion duda: de La Astronomia dice que esta *"attributed forsooth to Hesiod"*. afirmar autoria
+donde la fuente duda seria el mismo problema de las citas falsas, un paso mas arriba.
+
+**marcadores de nota soldados al texto.** habia 1.813 en el texto citable, y salian dentro de las
+citas: el pasaje de pandora se leia *"he called this woman Pandora 1302, because..."*. los 1.452
+entre corchetes se quitan en todas las obras. los sueltos (`jar 1303`) **solo** en la antologia,
+donde evelyn-white los numera seguidos; en las demas obras esos numeros son años y referencias de
+linea de verdad ("year 1820", "line 252", "in 1646") y ahi no se tocan. quedan 0 de corchete y 54
+sueltos, todos legitimos.
 
 ### tres cosas que salieron de verificar el corpus
 
