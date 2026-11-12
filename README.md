@@ -137,6 +137,10 @@ son de homero, no de hesiodo) y los fragmentos del Ciclo Epico. citar el archivo
 queda marcado con `is_collection=True` y **no se indexa** hasta que `chunk_document` saque autor y
 obra del encabezado de cada seccion.
 
+y esto sube de prioridad, porque la Teogonia vive dentro de ese archivo: **sin el #348 indexado,
+la contradiccion de afrodita del punto 2 se queda con un solo lado.** partir la antologia por
+secciones no es limpieza, es ruta critica para la demo.
+
 ### formato de los encabezados, obra por obra
 
 esto define el `locator` de la tarea 3 de hildebrando. son cuatro formatos distintos, no uno:
