@@ -1,12 +1,13 @@
 {
   "_schema": {
-    "estado": "2 preguntas del grupo 'conflicto' VERIFICADAS contra el texto, con los pasajes copiados en `passages`. faltan 8 de conflicto, 10 de 'directa' y 10 de 'fuera'. los ejemplos marcados EJEMPLO son plantillas del formato, no preguntas finales.",
+    "estado": "5 preguntas del grupo 'conflicto' VERIFICADAS contra el texto, con los pasajes de cada lado copiados en `passages`. faltan 5 de conflicto, 10 de 'directa' y 10 de 'fuera'.",
     "group": "directa | conflicto | fuera",
     "question": "la pregunta, en español",
     "reference": "la respuesta correcta segun el corpus, escrita a mano tras leer el pasaje. para el grupo 'fuera' va vacia.",
     "expected_sources": "las obras donde esta el dato, como aparecen en corpus.SOURCES. para el grupo 'fuera' va vacia.",
     "passages": "los pasajes verbatim que respaldan `reference`. son la evidencia de que la pregunta se verifico a mano.",
-    "como_verificar": "usar search.py para traer el contexto de un termino en las ocho obras, leer los dos lados y copiar los pasajes aqui. una pregunta de 'conflicto' sin passages de las dos fuentes NO esta verificada."
+    "como_verificar": "usar search.py para traer el contexto de un termino en las ocho obras, leer los dos lados y copiar los pasajes aqui. una pregunta de 'conflicto' sin passages de las dos fuentes NO esta verificada.",
+    "ojo": "NO citar como 'ovidio' los bloques EXPLANATION (notas de riley, s. XIX) ni como 'hesiodo' la introduccion de evelyn-white del #348. las dos cosas estan dentro de esos archivos y las dos producen citas falsas."
   },
   "questions": [
     {
@@ -16,21 +17,56 @@
       "reference": "Las fuentes se contradicen. Hesiodo dice que la jarra contenia males y que solo la Esperanza quedo dentro. Berens dice lo contrario: que contenia las bendiciones reservadas a la humanidad, que todas escaparon y que Pandora alcanzo a atrapar la Esperanza. Bulfinch recoge las dos versiones y se inclina por la de las bendiciones, argumentando que la Esperanza no podria haber estado guardada en una jarra llena de males.",
       "expected_sources": ["hesiodo, himnos homericos y homerica", "myths and legends", "the age of fable"],
       "passages": [
-        "Hesiodo (Trabajos y Dias, ll. 90-105): \"But the woman took off the great lid of the jar with her hands and scattered all these and her thought caused sorrow and mischief to men. Only Hope remained there in an unbreakable home within under the rim of the great jar, and did not fly out at the door [...] But the rest, countless plagues, wandered\"",
+        "Hesiodo, Trabajos y Dias (ll. 90-105): \"But the woman took off the great lid of the jar with her hands and scattered all these and her thought caused sorrow and mischief to men. Only Hope remained there in an unbreakable home within under the rim of the great jar, and did not fly out at the door [...] But the rest, countless plagues, wandered\"",
         "Berens: \"a jar [...] containing all the blessings reserved by the gods for mankind [...] immediately all the blessings which the gods had thus reserved for mankind took wing and flew away. But all was not lost. Just as Hope (which lay at the bottom) was about to escape, Pandora hastily closed the lid of the jar\"",
-        "Bulfinch, version 1: \"Forthwith there escaped a multitude of plagues for hapless man [...] The whole contents of the jar had escaped, one thing only excepted, which lay at the bottom, and that was HOPE.\"",
-        "Bulfinch, version 2: \"Another story is, that Pandora was sent in good faith, by Jupiter, to bless man; that she was furnished with a box, containing her marriage presents, into which every god had put some blessing. She opened the box incautiously, and the blessings all escaped, HOPE only excepted. This story seems more consistent than the former\""
+        "Bulfinch, primera version: \"Forthwith there escaped a multitude of plagues for hapless man [...] The whole contents of the jar had escaped, one thing only excepted, which lay at the bottom, and that was HOPE.\"",
+        "Bulfinch, segunda version: \"Another story is, that Pandora was sent in good faith, by Jupiter, to bless man; that she was furnished with a box, containing her marriage presents, into which every god had put some blessing. She opened the box incautiously, and the blessings all escaped, HOPE only excepted. This story seems more consistent than the former\""
       ]
     },
     {
       "id": "conflicto-02-afrodita",
       "group": "conflicto",
       "question": "¿Quien era la madre de Afrodita?",
-      "reference": "Las fuentes se contradicen. En Hesiodo, Afrodita no tiene madre: nace de la espuma del mar que se formo alrededor de los miembros de Urano despues de que Crono lo mutilara. En la Iliada, en cambio, Venus tiene madre, y es Dione, que la atiende en el Olimpo cuando Diomedes la hiere.",
-      "expected_sources": ["hesiodo, himnos homericos y homerica", "iliada"],
+      "reference": "Las fuentes se contradicen. En Hesiodo, Afrodita no tiene madre: nace de la espuma del mar que se formo alrededor de los miembros de Urano despues de que Crono lo mutilara. En la Iliada, en cambio, Venus tiene madre, y es Dione, que la atiende en el Olimpo cuando Diomedes la hiere. Bulfinch enuncia las dos versiones de forma explicita.",
+      "expected_sources": ["hesiodo, himnos homericos y homerica", "iliada", "the age of fable"],
       "passages": [
-        "Hesiodo (Teogonia): \"he had cut off the members with flint and cast them from the land into the surging sea [...] and a white foam spread around them from the immortal flesh, and in it there grew a maiden [...] Her gods and men call Aphrodite, and the foam-born goddess\"",
-        "Homero (Iliada, libro V): \"Venus rescues AEneas, but being wounded by Diomed, commits him to the care of Apollo and goes to Olympus, where she is tended by her mother Dione\""
+        "Hesiodo, Teogonia: \"he had cut off the members with flint and cast them from the land into the surging sea [...] and a white foam spread around them from the immortal flesh, and in it there grew a maiden [...] Her gods and men call Aphrodite, and the foam-born goddess\"",
+        "Homero, Iliada (libro V): \"Venus rescues AEneas, but being wounded by Diomed, commits him to the care of Apollo and goes to Olympus, where she is tended by her mother Dione\"",
+        "Bulfinch, con las dos: \"Venus (Aphrodite), the goddess of love and beauty, was the daughter of Jupiter and Dione. Others say that Venus sprang from the foam of the sea.\""
+      ]
+    },
+    {
+      "id": "conflicto-03-eros",
+      "group": "conflicto",
+      "question": "¿De quien era hijo Eros?",
+      "reference": "Las fuentes se contradicen. En la Teogonia de Hesiodo, Eros no tiene padres: es uno de los primeros seres que llegan a existir, junto con el Caos, la Tierra y el Tartaro. Berens, en cambio, lo presenta como hijo de Afrodita. Berens incluso senala que en la Teogonia Afrodita pertenece a las divinidades mas antiguas, a diferencia de las posteriores que descienden unas de otras.",
+      "expected_sources": ["hesiodo, himnos homericos y homerica", "myths and legends"],
+      "passages": [
+        "Hesiodo, Teogonia (ll. 116-138): \"Verily at the first Chaos came to be, but next wide-bosomed Earth, the ever-sure foundations of all the deathless ones who hold the peaks of snowy Olympus, and dim Tartarus in the depth of the wide-pathed Earth, and Eros (Love), fairest among the deathless gods\"",
+        "Berens: \"Aphrodite was the mother of Eros (Cupid), the god of Love, also of AEneas, the great Trojan hero\""
+      ]
+    },
+    {
+      "id": "conflicto-04-esposa-hefesto",
+      "group": "conflicto",
+      "question": "¿Quien era la esposa de Hefesto?",
+      "reference": "Las fuentes se contradicen. Bulfinch dice que Jupiter le dio a Venus por esposa en agradecimiento por haberle forjado los rayos, y lo remata diciendo que asi la mas hermosa de las diosas quedo casada con el mas feo de los dioses. Berens, en cambio, anota que segun algunos relatos la esposa de Hefesto era Charis.",
+      "expected_sources": ["the age of fable", "myths and legends"],
+      "passages": [
+        "Bulfinch: \"Jupiter gave her to Vulcan, in gratitude for the service he had rendered in forging thunderbolts. So the most beautiful of the goddesses became the wife of the most ill-favored of the gods\"",
+        "Berens (nota): \"According to some accounts Chares [Charis] was the wife of Hephaestus.\""
+      ]
+    },
+    {
+      "id": "conflicto-05-absyrtus",
+      "group": "conflicto",
+      "question": "¿Como murio Absirto, el hermano de Medea?",
+      "reference": "Las fuentes se contradicen de raiz, incluso en quien era Absirto. En la Argonautica de Apolonio y en Berens es un adulto: comanda la flota que Eetes envia a perseguir a los fugitivos, y muere en una emboscada tramada por Jason y Medea. En Bulfinch es un nino: Medea se lo lleva consigo al huir de Colcos y, al ver que los perseguidores ganan terreno, lo hace matar y esparce sus miembros por el mar. Bulfinch presenta su version como \"otra historia\".",
+      "expected_sources": ["argonautica", "myths and legends", "the age of fable"],
+      "passages": [
+        "Apolonio, Argonautica (libro IV): \"For all that inhabit this land are eager to aid Apsyrtus, that they may lead thee back home to thy father, like some captured maid [...] But this covenant will weave a web of guile\"",
+        "Berens: \"MURDER OF ABSYRTUS. -- Meanwhile Aetes, having discovered the loss of his daughter and the Golden Fleece, despatched a large fleet, under the command of his son Absyrtus, in pursuit of the fugitives.\"",
+        "Bulfinch: \"There is another story of Medea almost too revolting for record [...] In her flight from Colchis she had taken her young brother Absyrtus with her. Finding the pursuing vessels of AEETES gaining upon the Argonauts, she caused the lad to be killed and his limbs to be strewn over the sea.\""
       ]
     },
     {

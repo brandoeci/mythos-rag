@@ -138,8 +138,13 @@ queda marcado con `is_collection=True` y **no se indexa** hasta que `chunk_docum
 obra del encabezado de cada seccion.
 
 y esto sube de prioridad, porque la Teogonia vive dentro de ese archivo: **sin el #348 indexado,
-la contradiccion de afrodita del punto 2 se queda con un solo lado.** partir la antologia por
-secciones no es limpieza, es ruta critica para la demo.
+tres de las cinco contradicciones verificadas se quedan con un solo lado.** partir la antologia
+por secciones no es limpieza, es ruta critica para la demo.
+
+ademas el archivo trae la **introduccion de evelyn-white**, un estudio del siglo XX sobre hesiodo,
+antes de los textos. citarla como "hesiodo" es el mismo problema que las notas de riley en ovidio,
+y es facil caer: la introduccion resume la teogonia, asi que una busqueda de "chaos, earth and
+eros" cae primero en el resumen del traductor y no en el verso.
 
 ### formato de los encabezados, obra por obra
 
@@ -172,17 +177,26 @@ para **encontrar** candidatos, no como los dos lados.
 
 ### catalogo de contradicciones (en `eval/questions.json`)
 
-dos verificadas contra el texto, con los pasajes de cada lado copiados en el campo `passages`:
+**cinco verificadas** contra el texto, con los pasajes de cada lado copiados en el campo
+`passages`. los tres ejes productivos resultaron ser estos, y las cinco salieron de ahi:
 
-| # | pregunta | las fuentes dicen |
-| --- | --- | --- |
-| 1 | ¿que contenia la jarra de pandora, males o bendiciones? | hesiodo dice males y que solo quedo la Esperanza. berens dice que eran las bendiciones reservadas a los hombres. **bulfinch recoge las dos y se inclina por la segunda** |
-| 2 | ¿quien era la madre de afrodita? | en hesiodo no tiene madre, nace de la espuma del mar. en la iliada, venus tiene por madre a dione |
+| # | pregunta | las fuentes dicen | eje |
+| --- | --- | --- | --- |
+| 1 | ¿que contenia la jarra de pandora, males o bendiciones? | hesiodo dice males y que solo quedo la Esperanza. berens dice que eran las bendiciones reservadas a los hombres. **bulfinch recoge las dos y se inclina por la segunda** | hesiodo vs compendios |
+| 2 | ¿quien era la madre de afrodita? | en hesiodo no tiene madre, nace de la espuma. en la iliada es dione. **bulfinch enuncia las dos** | hesiodo vs homero |
+| 3 | ¿de quien era hijo eros? | en la teogonia no tiene padres, es uno de los primeros seres junto al caos y la tierra. en berens es hijo de afrodita | cosmogonico |
+| 4 | ¿quien era la esposa de hefesto? | bulfinch dice venus, "la mas hermosa de las diosas con el mas feo de los dioses". berens anota que segun algunos relatos era charis | bulfinch vs berens |
+| 5 | ¿como murio absirto, el hermano de medea? | en apolonio y berens es un **adulto** que comanda la flota perseguidora y muere en una emboscada de jason. en bulfinch es un **nino** que medea se lleva y manda matar, esparciendo sus miembros por el mar | apolonio vs bulfinch |
 
-la primera es el mejor caso posible para la demo: es bulfinch, dentro del corpus, el que dice que
-hay dos versiones. la respuesta correcta del sistema no es escoger una, es reportar las dos.
+la 1 y la 5 son los mejores casos para la demo: en las dos es **una fuente del corpus** la que
+dice que hay otra version ("Another story is...", "There is another story..."). el ground truth no
+se discute, y la respuesta correcta del sistema no es escoger una, es reportar las dos.
 
-faltan 8 de conflicto, 10 de "directa" y 10 de "fuera". para verificarlas esta `search.py`:
+la 5 es la mas fuerte de todas porque las fuentes no discrepan en un detalle: discrepan en **quien
+era absirto**, un adulto al mando de una flota o un nino. eso no se puede promediar en una
+respuesta, hay que atribuirlo.
+
+faltan 5 de conflicto, 10 de "directa" y 10 de "fuera". para verificarlas esta `search.py`:
 
 ```bash
 python search.py pandora          # el contexto del termino en las ocho obras
