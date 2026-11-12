@@ -1,6 +1,6 @@
 """el pipeline rag: el grafo de langgraph que responde citando el corpus.
 
-responsable: persona b.
+responsable: lancheros.
 
 mientras los nodos esten en construccion, `answer()` corre en **modo stub** y
 devuelve datos falsos con la forma definitiva. asi la interfaz (`app.py`) y el
@@ -74,22 +74,22 @@ class State(TypedDict, total=False):
 
 def retrieve(state: State) -> State:
     """retrieval hibrido: denso + bm25, con fusion de los dos rankings."""
-    raise NotImplementedError("persona b")
+    raise NotImplementedError("lancheros")
 
 
 def grade(state: State) -> State:
     """decide si los chunks recuperados realmente responden la pregunta."""
-    raise NotImplementedError("persona b")
+    raise NotImplementedError("lancheros")
 
 
 def detect_conflict(state: State) -> State:
     """agrupa por fuente, extrae la afirmacion de cada una y las compara."""
-    raise NotImplementedError("persona b")
+    raise NotImplementedError("lancheros")
 
 
 def generate(state: State) -> State:
     """redacta la respuesta en español con citas obligatorias."""
-    raise NotImplementedError("persona b")
+    raise NotImplementedError("lancheros")
 
 
 def abstain(state: State) -> State:
@@ -112,7 +112,7 @@ def build_graph():
 
     retrieve -> grade -> (abstain | detect_conflict -> generate)
     """
-    raise NotImplementedError("persona b")
+    raise NotImplementedError("lancheros")
 
 
 # --- punto de entrada --------------------------------------------------------

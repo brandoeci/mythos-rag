@@ -1,6 +1,6 @@
 """interfaz de la demo.
 
-responsable: persona c.
+responsable: ximena.
 
 funciona contra el stub de rag.answer(), asi que se puede construir y probar
 antes de que el pipeline exista. cuando rag.STUB pase a False, esto no cambia.

@@ -160,39 +160,190 @@ los numeros de esta tabla.
 - [ ] evaluacion con ablacion de las 4 configuraciones
 - [ ] interfaz gradio: respuesta + citas + panel de conflictos
 
-### ambicioso (stretch, se corta el 23 de noviembre si no esta empezado)
+### ambicioso (stretch, se corta el martes 17 si no esta empezado)
 
 - [ ] grafo de entidades: relaciones (hijo-de, mato-a, casado-con) extraidas con el llm
 - [ ] aristas en conflicto marcadas en el grafo segun la fuente
 
-## reparto
+## reparto y orden de tareas
 
-| persona | responsable de | entrega |
+| persona | responsable de | archivos |
 | --- | --- | --- |
-| a | corpus e indice | `corpus.py`, `index.py`, el indice en disco, tabla de tokens y chunks por obra |
-| b | pipeline rag | `rag.py` con `answer()` funcionando y el diagrama del grafo |
-| c | evaluacion, interfaz y video | `eval/questions.json`, `evaluate.py`, `app.py`, las tablas y el video |
+| hildebrando | corpus e indice | `corpus.py`, `index.py` |
+| lancheros | pipeline rag | `rag.py` |
+| ximena | evaluacion, interfaz y video | `evaluate.py`, `app.py`, `eval/questions.json` |
+
+cada bloque va **en orden**: la tarea 3 asume que la 2 esta lista. debajo de cada
+tarea esta lo que hay que *asegurar* antes de darla por hecha, porque es ahi
+donde esto se cae.
+
+si alguien necesita cambiar `Answer` en `rag.py`, se avisa al grupo primero: ese
+cambio rompe los otros dos modulos.
+
+### hildebrando — corpus e indice
+
+1. **verificar los seis `gutenberg_id`** en gutenberg.org.
+   *asegurar:* dejar anotada en `SOURCES` la traduccion exacta de cada obra.
+   varias tienen varias traducciones, y la traduccion cambia el texto que vamos
+   a citar en el video.
+2. **limpiar las seis obras** con `strip_boilerplate` y `normalize`.
+   *asegurar:* buscar "gutenberg", "transcriber" y "copyright" en el texto
+   limpio y que de cero. si el pie de licencia entra al corpus, el sistema va a
+   citar la licencia como si fuera homero, y eso se ve en la demo.
+3. **`chunk_document` con un `locator` que sirva.**
+   *asegurar:* el locator tiene que dejar a un humano encontrar el pasaje en el
+   libro ("canto xii", "libro iii"), no `chunk_4871`. cada obra marca sus
+   divisiones distinto, asi que son seis parsers pequeños y no uno. prueba:
+   tomar 10 chunks al azar y buscar el pasaje a mano con el locator. si no lo
+   encuentras, el locator no sirve.
+4. **mapa de variantes de nombres.** heracles/hercules, odiseo/ulises,
+   zeus/jove/jupiter. el corpus mezcla nombres griegos y latinos segun el autor
+   y el traductor; sin esto, preguntar por "heracles" no recupera los pasajes
+   que dicen "hercules". se aplica a la consulta y a la copia que indexa bm25.
+   *asegurar:* probar cada par y que devuelva los pasajes de las dos formas.
+5. **deduplicar pasajes casi identicos.** bulfinch parafrasea a los otros
+   autores, asi que hay chunks que dicen lo mismo. sin dedup, el retrieval
+   devuelve cinco veces el mismo hecho y tapa a la fuente que lo contradice:
+   eso mata la pieza de conflictos, que es la del proyecto.
+   *asegurar:* medir cuantos pares pasan de 0.95 de similitud, decidir que se
+   hace con ellos y dejar la decision escrita.
+6. **chroma con embeddings locales, persistido en `index/`.**
+   *asegurar:* cerrar python, volver a abrirlo y cargar el indice **sin**
+   recalcular embeddings. cronometrar los dos caminos y guardar los numeros, van
+   al notebook.
+7. **bm25 sobre la copia limpiada duro.**
+   *asegurar:* el `text` del `Chunk` no se toca nunca. ese es el que se cita.
+8. **`HybridRetriever.search` con fusion de los dos rankings.**
+   *asegurar:* que `alpha=1.0` (denso puro) y `alpha=0.0` (lexico puro)
+   funcionen solos. la tabla de ablacion necesita denso e hibrido como filas
+   separadas; si solo funciona en 0.5, no hay tabla.
+9. **la tabla de tokens y chunks por obra** (`summarize`), para el notebook.
+
+### lancheros — pipeline rag
+
+1. **la rebanada vertical, antes que nada.** retrieval denso sobre **una** obra
+   y `generate` con cita. fea, sin hibrido, sin grading.
+   *asegurar:* que exista el **viernes 13**. es el hito que decide si el
+   proyecto va bien o si hay que recortar, y recortar el 13 se puede, el 18 no.
+2. **`generate` con citacion obligatoria.** lo mas importante del proyecto.
+   *asegurar:* que cada cita devuelta exista **literal** en el corpus. se
+   verifica solo: buscar `citation.text` como substring del chunk de origen. si
+   el modelo parafrasea la cita, la cita es falsa — y una cita falsa es peor que
+   no citar, porque es exactamente el problema que decimos resolver.
+3. **cache en disco de toda llamada al llm.** hoy, no cuando duela.
+   *asegurar:* correr el notebook completo dos veces y que la segunda no gaste
+   cuota.
+4. **`grade` y abstencion, con el umbral calibrado.**
+   *asegurar:* `ABSTAIN_THRESHOLD` se calibra con el grupo 3 de las preguntas,
+   no a ojo. y se reportan los dos numeros juntos: cuanto abstiene de lo que
+   debe y cuanto de lo que no. un umbral que abstiene de todo saca 10/10 en el
+   grupo 3 y arruina el grupo 1.
+5. **`detect_conflict`.**
+   *asegurar:* el riesgo es el falso positivo. dos fuentes que dicen lo mismo
+   con otras palabras no son una contradiccion. probar con 5 casos donde si se
+   contradicen y 5 donde solo cambia la redaccion, y que distinga.
+6. **el grafo de langgraph** con las aristas condicionales.
+   *asegurar:* exportar el diagrama (png o mermaid) para el notebook y el video.
+7. **flags de configuracion** para que `evaluate.py` pueda pedir `rag_denso`,
+   `rag_hibrido` y `rag_hibrido_conflictos` sin editar codigo.
+8. **reescritura de la consulta antes del retrieval.** la pregunta viene en
+   español y el corpus esta en ingles; expandirla a los terminos del corpus
+   deberia mejorar el retrieval.
+   *asegurar:* medirlo con y sin. si no mejora, se dice en la discusion.
+9. **pase de auto-verificacion.** el modelo revisa su propia respuesta contra
+   los chunks y retira lo que no quede soportado.
+
+### ximena — evaluacion, interfaz y video
+
+1. **las 30 preguntas, 10 por grupo.**
+   *asegurar (grupo 2):* verificar a mano, leyendo los dos pasajes, que las
+   fuentes **si** se contradicen. una pregunta donde no se contradicen no mide
+   nada. es media hora y hay que hacerla el **sabado 14**: lancheros la necesita
+   el lunes para construir `detect_conflict`.
+   *asegurar (grupo 3):* que suenen plausibles. el padre de un personaje que no
+   aparece en el corpus, no "cual es la capital de francia": una pregunta
+   absurda la rechaza cualquier modelo y no prueba nada.
+   *asegurar:* cada `reference` se escribe despues de leer el pasaje, y
+   `expected_sources` apunta a obras que existen en `corpus.SOURCES`.
+2. **la interfaz gradio contra el stub**, desde hoy.
+   *asegurar:* que las tres formas de respuesta se vean bien — normal,
+   conflicto y abstencion. el stub ya produce las tres.
+3. **`is_correct` con el llm como juez.**
+   *asegurar:* validar al juez antes de confiarle la tabla. calificar 10
+   respuestas a mano y comparar. si el juez no coincide con ustedes en al menos
+   8 de 10, esta mal y los numeros no valen nada. ese dato va al notebook: es lo
+   que hace creible la evaluacion.
+   *asegurar:* el juez no ve que configuracion produjo la respuesta.
+4. **`citations_ok` estricto.**
+   *asegurar:* no basta con que la obra citada sea la correcta; el texto citado
+   tiene que existir en el corpus.
+5. **correr las 4 configuraciones y armar la tabla de ablacion.**
+   *asegurar:* mismo set, misma semilla y **misma version del corpus** en las
+   cuatro corridas. si el corpus cambia a mitad, la tabla no compara nada.
+   anotar el commit con el que se corrio.
+6. **tres ejemplos cualitativos lado a lado**: la misma pregunta respondida por
+   el llm solo y por el rag, uno de cada grupo. es lo primero que se mira.
+7. **guion del video y ensayo cronometrado.**
+   *asegurar:* entre 5 y 10 minutos es requisito. ensayar con cronometro antes
+   de grabar, y que hablen los tres.
+8. **reportar tambien lo que fallo:** los falsos positivos de conflicto, las
+   preguntas que nadie acerto y que tipo de pregunta rompe el sistema. una
+   discusion que solo muestra lo que funciono se cae en preguntas.
+
+### orden entre los tres
+
+- **jue 12 (hoy):** los tres clonan y dejan el entorno **corriendo y probado**
+  esta noche. un problema de instalacion descubierto el lunes cuesta un dia que
+  no existe. se ratifica `Answer`. hildebrando verifica los `gutenberg_id`,
+  ximena arranca las preguntas contra el stub, lancheros se hace un indice
+  rapido de una sola obra para no esperar a nadie.
+- **vie 13:** la rebanada vertical responde una pregunta de punta a punta. si no,
+  se recorta ese mismo dia.
+- **sab 14:** ximena verifica a mano el grupo 2, que lancheros necesita el lunes.
+  hildebrando entrega chroma persistido y bm25.
+- **dom 15:** hildebrando entrega el hibrido con los alphas sueltos. al cerrar
+  el dia, **integracion**: el pipeline real corre contra el indice real y
+  `STUB` pasa a `False`.
+- **lun 16:** ximena corre las 4 configuraciones aunque esten incompletas, para
+  tener el arnes probado. lancheros construye `detect_conflict`.
+- **mar 17:** nucleo cerrado y corte del stretch.
+- **mie 18:** code freeze y corridas finales.
+- **jue 19:** escritura del notebook y ensayo del video.
+- **vie 20:** entrega.
 
 ## cronograma
 
+entrega: **viernes 20 de noviembre**. son nueve dias contando hoy, con un solo
+fin de semana. el alcance es el mismo de arriba; lo que desaparecio es la
+holgura, asi que los hitos se adelantan y se integra todos los dias.
+
 | fechas | fase | hito que cierra la fase |
 | --- | --- | --- |
-| 12-13 nov | arranque | corpus elegido, contrato de `answer()` firmado, repo con modulos vacios y el stub |
-| 14-17 nov | rebanada vertical | **una** pregunta se responde de punta a punta con cita. fea, un solo libro, sin hibrido. pero funciona |
-| 18-22 nov | nucleo | hibrido, abstencion, conflictos. corpus completo. las 30 preguntas escritas |
-| 23-26 nov | evaluacion y ui | las 4 corridas hechas, tabla de ablacion lista, gradio funcionando. **el 23 se decide si el grafo entra o se corta** |
-| 27-28 nov | escritura | **code freeze el 27.** notebook escrito con los numeros reales |
-| 29 nov | video | grabado y montado |
-| 30 nov | entrega | enviado en la mañana, no a las 23:59 |
+| jue 12 (hoy) | arranque | los tres con el repo clonado y el entorno **probado**, contrato de `answer()` ratificado, los seis `gutenberg_id` verificados |
+| vie 13 | rebanada vertical | **una** pregunta se responde de punta a punta con cita. una sola obra, sin hibrido. pero funciona |
+| sab 14 - dom 15 | el motor del proyecto | indice real persistido, citacion verificada, abstencion, las 30 preguntas escritas y el grupo 2 verificado a mano. **integracion el domingo en la noche: `STUB = False`** |
+| lun 16 - mar 17 | nucleo cerrado | hibrido, dedup, conflictos, grafo de langgraph, flags de configuracion. **el 17 se decide si el grafo de entidades entra o se corta** |
+| mie 18 | congelar | **code freeze.** las 4 corridas finales y la tabla de ablacion definitiva |
+| jue 19 | escritura | notebook completo con los numeros reales, guion del video y ensayo cronometrado |
+| vie 20 | entrega | grabar y montar en la mañana, enviar en la tarde. no a las 23:59 |
 
-dos reglas sobre el calendario:
+cinco reglas sobre este calendario:
 
-**el hito del 17 es el que importa.** si el 17 no hay una respuesta de punta a punta, por fea que
-sea, hay que recortar ahi mismo y no el 28. un pipeline que integra el dia 25 es un pipeline que
-no integra.
+**el hito del viernes 13 es el que importa.** si el viernes no hay una respuesta de punta a punta,
+por fea que sea, se recorta ese dia y no el miercoles. un pipeline que integra el 17 no integra.
 
-**el code freeze del 27 es sagrado.** el video vale 30%. un video grabado a la carrera a
-medianoche cuesta mas puntos que cualquier feature que alcance a entrar el 28.
+**el fin de semana no es opcional.** sabado y domingo son los dos unicos dias completos que hay.
+el trabajo pesado en paralelo va ahi; si se pierden, no hay de donde sacarlos.
+
+**se integra todos los dias, no al final.** con nueve dias no hay espacio para descubrir el 17 que
+los modulos no encajan. por eso la integracion esta agendada el domingo y no el miercoles.
+
+**sync diario de 15 minutos a hora fija.** cada uno dice que cerro y que lo tiene bloqueado.
+alguien atascado en silencio medio dia cuesta mas del 5% del calendario.
+
+**el alcance queda congelado desde hoy.** no entran ideas nuevas: no hay holgura para absorberlas.
+lo que sobre tiempo se gasta en el stretch que ya esta en la lista, no en algo que se ocurra el
+lunes.
 
 ## riesgos
 
@@ -201,8 +352,9 @@ medianoche cuesta mas puntos que cualquier feature que alcance a entrar el 28.
 | se acaba la cuota de la api en la semana final | embeddings locales + cache en disco desde el dia 1, no despues |
 | el notebook no corre el dia de la revision | indice persistido y salidas guardadas en el `.ipynb`. cero celdas que tarden 40 minutos |
 | merge hell en el notebook | codigo en `.py`, el notebook solo importa y muestra |
-| scope creep con el grafo | es stretch y tiene fecha de corte: 23 de noviembre |
-| el detector de conflictos no detecta nada | verificar el 18 que el corpus **si** se contradice sobre las entidades elegidas, antes de construir el detector encima |
+| scope creep con el grafo | es stretch y tiene fecha de corte: martes 17 |
+| el detector de conflictos no detecta nada | verificar el **sabado 14** que el corpus **si** se contradice sobre las entidades elegidas, antes de construir el detector encima |
+| nueve dias sin holgura | se integra a diario y el hito del viernes 13 es el canario: si falla, se recorta ese dia |
 
 el ultimo es el riesgo silencioso: si las fuentes elegidas no se contradicen, la pieza estrella no
 tiene nada que mostrar. se chequea a mano, en media hora.
@@ -224,13 +376,13 @@ forma definitiva.
 python app.py        # la interfaz, funcionando contra el stub
 ```
 
-eso es a proposito. persona c construye y prueba la interfaz y el arnes de
-evaluacion desde hoy, sin esperar a que persona b termine el pipeline. cuando
+eso es a proposito. ximena construye y prueba la interfaz y el arnes de
+evaluacion desde hoy, sin esperar a que lancheros termine el pipeline. cuando
 los nodos esten listos se pone `rag.STUB = False` y nada mas cambia.
 
-lo que falta implementar esta marcado con `raise NotImplementedError("persona
-x")` en cada modulo, asi que `grep -rn NotImplementedError` da la lista de
-pendientes con su dueño.
+lo que falta implementar esta marcado con `raise NotImplementedError("<nombre>")`
+en cada modulo, asi que `grep -rn NotImplementedError` da la lista de pendientes
+con su dueño.
 
 ## licencia del corpus
 

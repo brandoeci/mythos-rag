@@ -1,6 +1,6 @@
 """arnes de evaluacion: corre las 4 configuraciones y arma la tabla de ablacion.
 
-responsable: persona c.
+responsable: ximena.
 
 funciona contra el stub de rag.answer(), asi que la tabla se puede armar antes
 de que el pipeline exista: al principio da numeros sin sentido, pero la
@@ -54,7 +54,7 @@ def run(question: Question, config: str) -> Answer:
     """corre una pregunta bajo una configuracion.
 
     mientras rag.STUB este en True todas las configuraciones devuelven lo
-    mismo. persona b expone los flags para diferenciarlas.
+    mismo. lancheros expone los flags para diferenciarlas.
     """
     return answer(question.question)
 
@@ -66,7 +66,7 @@ def is_correct(result: Answer, question: Question) -> bool:
     respuesta, y pidiendole solo si coinciden en el hecho. el prompt del juez
     no ve que configuracion la produjo, para no sesgarlo.
     """
-    raise NotImplementedError("persona c")
+    raise NotImplementedError("ximena")
 
 
 def citations_ok(result: Answer, question: Question) -> bool:

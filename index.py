@@ -1,6 +1,6 @@
 """chunking, embeddings y los dos indices: chroma (denso) y bm25 (lexico).
 
-responsable: persona a.
+responsable: hildebrando.
 
 el indice queda persistido en `index/` para que el notebook del entregable no
 tenga que reconstruirlo el dia de la revision.
@@ -51,7 +51,7 @@ def chunk_document(text: str, author: str, work: str) -> list[Chunk]:
     el solape existe para que una frase partida por la mitad siga siendo
     recuperable desde los dos lados.
     """
-    raise NotImplementedError("persona a")
+    raise NotImplementedError("hildebrando")
 
 
 def build_dense_index(chunks: list[Chunk]):
@@ -60,7 +60,7 @@ def build_dense_index(chunks: list[Chunk]):
     los embeddings se calculan localmente con sentence-transformers: indexar
     por api quemaria la cuota que necesitamos para generar.
     """
-    raise NotImplementedError("persona a")
+    raise NotImplementedError("hildebrando")
 
 
 def build_lexical_index(chunks: list[Chunk]):
@@ -69,7 +69,7 @@ def build_lexical_index(chunks: list[Chunk]):
     aqui si conviene limpiar duro (minusculas, sin signos): bm25 compara
     tokens, no lee. el texto verbatim para citar vive en el Chunk.
     """
-    raise NotImplementedError("persona a")
+    raise NotImplementedError("hildebrando")
 
 
 class HybridRetriever:
@@ -88,4 +88,4 @@ class HybridRetriever:
 
     def search(self, query: str, k: int = 8) -> list[tuple[Chunk, float]]:
         """devuelve los k chunks mas relevantes con su score normalizado."""
-        raise NotImplementedError("persona a")
+        raise NotImplementedError("hildebrando")

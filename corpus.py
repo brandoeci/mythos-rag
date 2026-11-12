@@ -1,6 +1,6 @@
 """descarga y pre-procesamiento del corpus.
 
-responsable: persona a.
+responsable: hildebrando.
 
 las obras se bajan de project gutenberg una sola vez y quedan en `data/`. en
 corridas posteriores se leen del disco, igual que en el taller 2.
@@ -35,7 +35,7 @@ class Source:
         return DATA_DIR / self.filename
 
 
-# TODO(persona a): verificar cada gutenberg_id en gutenberg.org antes de usarlo.
+# TODO(hildebrando): verificar cada gutenberg_id en gutenberg.org antes de usarlo.
 # los ids de abajo estan en cero a proposito: no se adivinan, se confirman uno
 # por uno abriendo la ficha de la obra y copiando el numero del ebook.
 # ojo al escoger la edicion: varias de estas obras tienen varias traducciones en
