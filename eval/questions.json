@@ -93,7 +93,7 @@
       "id": "fuera-01-sigurd",
       "group": "fuera",
       "question": "¿Como murio Sigurd y quien lo traiciono?",
-      "reference": "Sigurd no aparece en ninguna de las ocho obras, ni con ese nombre ni como Siegfried, y tampoco Volsung, Brynhild, Fafnir ni los Nibelungos. Es un negativo dificil a proposito: el corpus SI trae mitologia nordica (loki 59 veces, valhalla 18, balder 10, freya 9), asi que la cercania tematica invita a responder. El sistema no debe completar el ciclo heroico de los Volsungos a partir del panteon. Reemplaza la pregunta de Hiperborea, que estaba mal clasificada.",
+      "reference": "Sigurd no aparece en ninguna de las ocho obras, ni con ese nombre ni como Siegfried, y tampoco Volsung, Brynhild, Fafnir ni los Nibelungos. Es un negativo dificil a proposito: el corpus SI trae mitologia nordica (thor 77 veces, loki 47, odin 29, valhalla 11), asi que la cercania tematica invita a responder. El sistema no debe completar el ciclo heroico de los Volsungos a partir del panteon. Reemplaza la pregunta de Hiperborea, que estaba mal clasificada.",
       "expected_sources": [],
       "passages": []
     },

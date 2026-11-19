@@ -369,23 +369,47 @@ modo de fallo distinto de los otros dos y conviene tenerlo medido.
 el grupo que mas pesa en la demo esta completo y verificado. tiene **dos clases de pregunta**, y
 las dos hacen falta:
 
-**(a) entidad ausente** — el sujeto no esta en el corpus. el retrieval no trae nada relevante y el
-umbral lo atrapa. es el caso facil. van 8: hiperborea, mitra, arquimedes, tule, el demiurgo,
-gilgamesh, cuchulainn e ishtar.
+**(a) entidad ausente** — el sujeto no esta en el corpus. el bm25 da cero exacto y el sistema se
+abstiene. van 7: sigurd, mitra, arquimedes, tule, el demiurgo, gilgamesh y cuchulainn.
 
-dos de esas son tramposas a proposito: **arquimedes**, porque el corpus si menciona a pitagoras
-(36 veces), platon (13) y eratostenes (11), asi que esperarlo es razonable; y **cuchulainn**,
-porque bulfinch si trae mitologia nordica (odin 29, thor 77), asi que esperar material celta
-tampoco es absurdo. el corpus es mucho mas ancho que "mitologia griega".
+tres de esas son tramposas a proposito, porque el corpus es mucho mas ancho que "mitologia
+griega". **arquimedes**, porque si menciona a pitagoras (16 veces), platon (7), aristoteles (4) y
+eratostenes (4), asi que esperarlo es razonable. **cuchulainn**, porque bulfinch si trae mitologia
+nordica, asi que esperar material celta tampoco es absurdo. y **sigurd**, que es la mas dificil de
+las diez: el corpus trae el panteon nordico completo (thor 77, loki 47, odin 29, valhalla 11) pero
+**no** el ciclo heroico de los Volsungos, asi que preguntar como murio castiga responder por
+cercania tematica.
 
 **(b) dato ausente** — la entidad **si** esta y esta descrita en detalle, pero el dato puntual no.
 el retrieval trae chunks muy relevantes y el modelo queda tentado a completar. **esta es la clase
-que de verdad prueba la abstencion**, y es la que no se puede improvisar. van 2:
+que de verdad prueba la abstencion** y la que la señal lexica no puede atrapar, porque los
+terminos estan. van 3:
 
 | pregunta | por que esta verificada |
 | --- | --- |
 | ¿cuanto tardo hefesto en forjar el escudo de aquiles? | la iliada describe la forja en detalle, pero "vulcan" nunca aparece a menos de 400 caracteres de "days" ni de "hours" |
-| ¿cuantas colas tenia cerbero? | se habla de sus **cabezas** en 6 pasajes y de colas en **cero**. un modelo sin corpus suele responder con la cola de serpiente de otras tradiciones |
+| ¿que relacion tenia ishtar con afrodita? | "ishtar" da cero, pero "aphrodite" da 143, asi que el retrieval trae pasajes muy relevantes sobre el lado que si esta |
+| ¿de que tamaño era el caballo de madera de troya? | aparece en 19 chunks de seis obras y **nunca con una medida**. lo unico que dice es cualitativo: *"made so huge for the express purpose of preventing its being carried within the walls"*. no hay codos, pies, brazas ni ninguna cifra |
+
+#### dos de estas preguntas estaban mal, y las dos por la misma razon
+
+esto salio al calibrar, y es una leccion del metodo que nos costo dos preguntas del set.
+**hiperborea** estaba en la clase (a) y **las colas de cerbero** en la (b), y las dos
+verificaciones eran falsas:
+
+| se habia buscado | da | pero | da |
+| --- | --- | --- | --- |
+| `hyperborea` | 0 | `hyperboreans` | **6** |
+| `tails` | 0 | `tail`, en berens: *"the tail of a dragon"* | **2** |
+
+las dos fallaron **por buscar una sola forma de la palabra**, que es la misma familia del error de
+contar substrings en vez de palabras completas que ya esta documentado mas abajo. bulfinch describe
+a los hiperboreos como *"a happy race ... dwelling in everlasting bliss"*, y berens dice que el
+cuerpo de cerbero *"terminated in the tail of a dragon"*: las dos preguntas tenian respuesta, asi
+que un sistema que se abstuviera habria acertado por la razon equivocada.
+
+se reemplazaron por sigurd y el caballo de troya, las dos verificadas contra **todas** las
+variantes de cada termino.
 
 ### una leccion del metodo: contar palabras, no substrings
 
@@ -456,18 +480,77 @@ las preguntas las escriben los tres, 10 cada uno, con revision cruzada. si las e
 construyo el retrieval, salen preguntas que el sistema ya sabe responder y la evaluacion no vale
 nada.
 
-y la tabla de ablacion, que es el argumento del proyecto. cada fila agrega una pieza, asi se ve
-que aporto cada una:
+**la medida principal no necesita juez.** las 20 preguntas contestables traen los pasajes verbatim
+que las respaldan, copiados del corpus al verificarlas a mano, asi que se comprueba directo si el
+retrieval recupero el pasaje bueno. eso mide lo unico que cambia entre configuraciones y no
+depende de la redaccion ni de la cuota. se compara por secuencias de 8 palabras, porque un pasaje
+puede caer partido entre dos chunks.
 
-| configuracion | aciertos | citas correctas | conflictos detectados | abstuvo cuando debia |
-| --- | --- | --- | --- | --- |
-| llm solo, sin corpus | | n/a | | |
-| rag denso | | | | |
-| rag hibrido | | | | |
-| rag hibrido + conflictos | | | | |
+y la tabla de ablacion, que es el argumento del proyecto. cada fila cambia una sola cosa:
+
+| configuracion | pasaje de oro /20 | citas a la obra /20 | conflictos /10 | falsos /10 | se abstuvo /10 |
+| --- | --- | --- | --- | --- | --- |
+| llm solo, sin corpus | no se corrio, falta la api key | | | | |
+| rag lexico (`alpha = 0`) | 6 | 8 | 0 | 0 | 7 |
+| rag denso (`alpha = 1`) | 9 | 9 | 0 | 0 | 7 |
+| rag hibrido (`alpha = 0.5`) | **11** | 9 | 0 | 0 | 7 |
+| rag hibrido + conflictos | **11** | 9 | **5** | 1 | 7 |
+
+**el hibrido le gana a los dos indices solos**, que era la razon de tenerlos a los dos: 11 contra 9
+y 6. no es que uno sea mejor, es que fallan en preguntas distintas. el lexico no puede con "¿quien
+creo a la humanidad?", que no tiene un solo nombre propio; el denso no puede con "Absirto", porque
+un nombre raro no tiene vecindario semantico que lo ubique.
+
+pero hay un matiz que es lo mas interesante que salio. moviendo `alpha` y `k`, con el pasaje de oro
+sobre 20:
+
+| alpha | k=6 | k=10 | k=20 |
+| --- | --- | --- | --- |
+| 0.0 solo lexico | 6 | 10 | 11 |
+| 0.3 | 9 | 11 | 13 |
+| 0.5 | **11** | 12 | 13 |
+| 0.7 | 10 | 11 | **14** |
+| 1.0 solo denso | 9 | 9 | **14** |
+
+**la ventaja del hibrido esta concentrada en `k` pequeño.** con `k = 20` el denso solo ya empata,
+o sea que el hibrido no recupera cosas que el denso no pueda recuperar nunca: las recupera **mas
+arriba**. y `k` pequeño es el regimen que importa, porque en el prompt caben unos pocos pasajes.
+por eso quedaron `alpha = 0.5` y `TOP_K = 6`: son los mejores en el unico punto de operacion que
+el generador puede usar.
+
+### la abstencion no sale del coseno, sale del bm25
+
+esto cambio el diseño. el plan era abstenerse con un umbral sobre la similitud del coseno. se
+calibro con los tres grupos y **no se puede**:
+
+| grupo | min | media | max |
+| --- | --- | --- | --- |
+| directa | 0.789 | 0.803 | 0.826 |
+| conflicto | 0.768 | 0.794 | 0.825 |
+| fuera | 0.766 | 0.788 | **0.805** |
+
+las distribuciones se superponen casi del todo. `fuera` llega a 0.805 y `directa` arranca en
+0.789, asi que **no hay umbral que los separe**: con 0.806 el sistema se abstiene de 8 de las 10
+preguntas que si tienen respuesta, y con 0.789 solo atrapa 3 de las 10 que no. las similitudes de
+e5 viven en una banda angosta, y "¿quien acompaño a Gilgamesh?" igual encuentra pasajes sobre el
+viaje de un heroe que se le parecen.
+
+la señal que si funciona es la del indice **lexico**, que es el que uno pondria para lo contrario.
+un termino que no esta en el corpus da **cero exacto**, no un numero pequeño, y eso si es una
+decision. la condicion no es "el bm25 dio cero" sino **"la pregunta nombra entidades y ninguna
+aparece en el corpus"**: "¿quien creo a la humanidad?" tambien da cero, porque no tiene ningun
+nombre propio, y esa si tiene respuesta. sin esa distincion el sistema se abstendria de dos
+preguntas buenas.
+
+da **7 de 10, con 0 falsas abstenciones** sobre las 20 contestables. las 3 que no atrapa son las de
+la clase (b): la entidad esta y falta el dato, asi que no hay señal lexica posible y hace falta que
+algo **lea** el pasaje.
+
+o sea que los dos indices no solo se complementan para recuperar: se complementan para **saber
+cuando callarse**.
 
 no se promete "eliminamos las alucinaciones". se reporta *reducimos y hacemos verificables*, con
-los numeros de esta tabla.
+los numeros de estas tablas.
 
 ## estado del proyecto
 
@@ -498,12 +581,21 @@ los numeros de esta tabla.
 - [x] arnes de evaluacion con los pasajes de oro, sin juez y sin cuota
 - [x] interfaz gradio con el deslizador de `alpha` a la vista
 
+- [x] indice denso construido y persistido, 4.674 chunks
+- [x] `ABSTAIN_THRESHOLD` calibrado, y el resultado fue que **el coseno no separa**: la abstencion
+      se rediseño sobre el bm25 y da 7/10 con 0 falsas abstenciones
+- [x] dos preguntas del grupo `fuera` estaban mal verificadas, reemplazadas por negativos
+      verificados contra todas las variantes
+- [x] tabla de ablacion corriendo, y el barrido de `alpha` y `k`
+- [x] Resultados y Discusion y Conclusion escritos con los numeros medidos
+- [x] el notebook corre de punta a punta sin errores (32 celdas, 12 de codigo)
+
 ### nucleo
 
-- [ ] calibrar `ABSTAIN_THRESHOLD` con la tabla de confianza por grupo
-- [ ] correr la ablacion completa y escribir el Resultados y Discusion
-- [ ] subir el recall del detector de conflictos (hoy prioriza no inventar)
-- [ ] correr el notebook de punta a punta y guardar las salidas
+- [ ] subir el pasaje de oro de 11/20, que es el techo de todo lo demas
+- [ ] el juez con llm en `grade`, para las 3 preguntas que la señal lexica no puede atrapar
+- [ ] subir el recall del detector de conflictos (5/10 hoy) sin perder la precision
+- [ ] correr el notebook con la api key y guardar las salidas en el .ipynb
 - [ ] grabar el video de la demo
 
 ### ambicioso (stretch, se corta el martes 17 si no esta empezado)
