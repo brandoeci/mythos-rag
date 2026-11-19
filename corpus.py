@@ -367,13 +367,33 @@ _DIVISIONS = {
     # son la misma traduccion y el mismo traductor.
     "odisea.txt": (re.compile(r"^BOOK ([IVXL]+)\s*$"), "libro"),
     "argonautica.txt": (re.compile(r"^BOOK ([IVXL]+)\s*$"), "libro"),
-    "bulfinch.txt": (re.compile(r"^Chapter ([IVXL]+)\s*$"), "capitulo"),
+    # bulfinch escribe "Chapter IV" menos en uno, que quedo "CHAPTER II". si no
+    # se acepta la mayuscula, ese encabezado no se ve y el capitulo ii entero
+    # (Prometheus and Pandora) se le suma al i, con lo que la cita de pandora
+    # sale con el capitulo equivocado.
+    "bulfinch.txt": (re.compile(r"^(?:Chapter|CHAPTER) ([IVXL]+)\s*$"), "capitulo"),
 }
 
 # berens no se parte por sus cuatro PARTES, que darian locators inservibles de
 # 26.000 palabras, sino por sus secciones con nombre: "HEPHAESTUS (VULCAN).",
 # "THE SIRENS.", "MURDER OF ABSYRTUS.--".
 _BERENS_HEADING = re.compile(r"^[A-Z][A-Z\s()'’,\-]*\.(?:--|—)?$")
+
+
+# lo que en berens no es texto de la obra. abre con el prefacio (que habla de
+# por que el libro sirve para los colegios, no de mitologia) y la tabla de
+# contenido, y cierra con el indice de pronunciacion —una seccion por letra,
+# "Jani (ja'-ni), 178. Janus (ja'-nus), 18, 178."— y con un anuncio de la
+# editorial de 1.415 palabras sobre un curso de ingles.
+#
+# todo eso son parrafos cortos y llenos de nombres propios, o sea imanes de
+# bm25, que divide el score por el largo del documento. y citar el anuncio como
+# berens explicando un mito seria la cita falsa mas vergonzosa de todas.
+_BERENS_FUERA = {"preface", "contents"}
+
+# el indice de pronunciacion marca el final del libro: de ahi en adelante no
+# queda nada citable.
+_BERENS_FIN = "pronouncing index"
 
 
 def _sections_berens(source: Source, text: str) -> list[Section]:
@@ -393,7 +413,15 @@ def _sections_berens(source: Source, text: str) -> list[Section]:
         sections.append(
             Section(source.author, source.work, title.rstrip(".-—").lower(), body)
         )
-    return sections
+
+    citables = []
+    for section in sections:
+        if section.locator == _BERENS_FIN:
+            break
+        if section.locator in _BERENS_FUERA:
+            continue
+        citables.append(section)
+    return citables
 
 
 def _sections_divided(source: Source, text: str) -> list[Section]:
@@ -416,10 +444,22 @@ def _sections_divided(source: Source, text: str) -> list[Section]:
             )
         buf.clear()
 
+    # bulfinch trae la tabla de contenido con los mismos encabezados de la obra,
+    # asi que se parsea dos veces: primero el indice y despues el libro. cuando
+    # un encabezado se repite sabemos que lo que llevabamos era el indice y lo
+    # botamos. no se puede dejar pasar: una entrada del indice son treinta
+    # palabras de puros nombres propios, y en bm25 un documento corto y denso le
+    # gana a cualquier capitulo de verdad.
+    seen: set[str] = set()
+
     for para in paras:
         if m := pattern.match(para.strip()):
             flush()
             current = m.group(1)
+            if current in seen:
+                sections.clear()
+                seen.clear()
+            seen.add(current)
             continue
         buf.append(para)
 
