@@ -449,15 +449,25 @@ los numeros de esta tabla.
 - [x] las 10 preguntas de "directa" verificadas, con el pasaje y la fuente de cada una
 - [x] **las 30 preguntas listas y verificadas**, 10 por grupo
 
+- [x] **atribucion por seccion**: 8 archivos a 449 secciones citables, cuatro formatos de encabezado
+- [x] el indice de bulfinch, su capitulo ii pegado al i, y el prefacio y el anuncio de berens, fuera
+- [x] chunking de 220 palabras con 50 de solape sobre secciones: **4.666 chunks, ids unicos**
+- [x] bm25 escrito a mano, con la tabla de nombres español/griego/latino
+- [x] indice denso con `multilingual-e5-base` local, persistido en `index/`
+- [x] hibrido con `alpha`, que es lo que hace que las filas de la ablacion sean un parametro
+- [x] el grafo de langgraph completo, con la abstencion como arista condicional
+- [x] respuesta con cita obligatoria, armada **desde el chunk** y no desde el texto del modelo
+- [x] modo extractivo: el sistema entero corre sin `GOOGLE_API_KEY`
+- [x] arnes de evaluacion con los pasajes de oro, sin juez y sin cuota
+- [x] interfaz gradio con el deslizador de `alpha` a la vista
+
 ### nucleo
 
-- [ ] corpus multi-fuente indexado, cada chunk con autor/obra/libro
-- [ ] retrieval hibrido: embeddings + bm25
-- [ ] respuesta con cita obligatoria al pasaje
-- [ ] abstencion cuando la respuesta no esta en el corpus
-- [ ] deteccion de versiones en conflicto
-- [ ] evaluacion con ablacion de las 4 configuraciones
-- [ ] interfaz gradio: respuesta + citas + panel de conflictos
+- [ ] calibrar `ABSTAIN_THRESHOLD` con la tabla de confianza por grupo
+- [ ] correr la ablacion completa y escribir el Resultados y Discusion
+- [ ] subir el recall del detector de conflictos (hoy prioriza no inventar)
+- [ ] correr el notebook de punta a punta y guardar las salidas
+- [ ] grabar el video de la demo
 
 ### ambicioso (stretch, se corta el martes 17 si no esta empezado)
 
