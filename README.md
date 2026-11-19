@@ -230,8 +230,10 @@ para **encontrar** candidatos, no como los dos lados.
 
 ### lo que salio de indexar el corpus
 
-las cuatro de arriba salieron de leer los archivos. estas tres salieron de partirlos en chunks, y
-no se veian antes.
+las cuatro de arriba salieron de leer los archivos. estas cuatro salieron de partirlos en chunks y
+de verificar el set de evaluacion contra el resultado, y no se veian antes. las cuatro son la misma
+cosa: **el texto del autor viene envuelto en texto que no es del autor**, y lo que lo envuelve es
+corto y denso en nombres propios, que es justo lo que el retrieval premia.
 
 **1. bulfinch tenia cada capitulo dos veces.** el archivo trae la tabla de contenido con los
 mismos encabezados que la obra, asi que el parser la leia como 24 secciones citables de 25 a 65
@@ -250,15 +252,34 @@ ningun lado hasta que el chunking tiro 23 ids repetidos.
 **3. berens cierra con un anuncio de la editorial.** despues del indice de pronunciacion, que son
 19 secciones de una letra cada una (*"Jani (ja'-ni), 178. Janus (ja'-nus), 18, 178."*), viene un
 anuncio de 1.415 palabras de un curso de ingles. y abre con el prefacio, que habla de por que el
-libro sirve para los colegios. de 166 secciones quedaron 143 citables.
+libro sirve para los colegios. de 166 secciones quedaron 144 citables.
 
-las tres son la misma cosa: el texto del autor viene envuelto en texto que **no** es del autor, y
-lo que lo envuelve es corto y denso en nombres propios, que es justo lo que el retrieval premia.
-por eso se revisa seccion por seccion y no por encima.
+**4. y las notas de berens estaban citadas como el anuncio.** esta salio despues, al verificar que
+cada pasaje de oro del set de evaluacion exista de verdad en algun chunk: dos de los 35 no
+aparecian. las notas de berens van al final del archivo, **despues** del indice de pronunciacion,
+asi que caian bajo el encabezado del anuncio y la cita salia
+
+> berens, myths and legends (**a complete course in the study of english**)
+
+y con el corte del punto 3 desaparecieron del todo. ninguna de las dos esta bien, porque son texto
+**propio** de berens, al contrario de las notas de riley en ovidio, que son de otro autor
+comentando a ovidio. y de ellas dependen dos preguntas verificadas: la nota 36 (*"According to
+some accounts Chares was the wife of Hephaestus"*) es un lado de la contradiccion de
+`conflicto-04`, y otra cuenta que a hefesto lo rescataron tetis y eurinome. quedaron en su propia
+seccion, con locator `notas`.
+
+de paso salio un error nuestro: uno de los pasajes tenia una glosa `[Charis]` metida **dentro** de
+las comillas, asi que no era verbatim y nunca iba a coincidir con el texto. la glosa se saco
+afuera. los 35 pasajes de oro estan verificados contra los chunks y se localizan todos.
+
+la leccion del metodo: ninguna de las cuatro se asomo leyendo los archivos ni mirando los chunks
+por encima. la 1 y la 2 salieron porque el chunking tiro **23 ids repetidos**, y la 4 porque se
+verifico que cada pasaje de oro exista de verdad en algun chunk. son chequeos baratos que hay que
+dejar corriendo, no revisiones de una sola vez.
 
 ### la tabla de nombres: sin ella el indice lexico no sirve para nada
 
-el corpus esta en ingles y las preguntas van en español. medido sobre los 4.666 chunks:
+el corpus esta en ingles y las preguntas van en español. medido sobre los 4.674 chunks:
 
 | en español | apariciones | forma griega | apariciones | forma latina | apariciones |
 | --- | --- | --- | --- | --- | --- |
@@ -451,7 +472,7 @@ los numeros de esta tabla.
 
 - [x] **atribucion por seccion**: 8 archivos a 449 secciones citables, cuatro formatos de encabezado
 - [x] el indice de bulfinch, su capitulo ii pegado al i, y el prefacio y el anuncio de berens, fuera
-- [x] chunking de 220 palabras con 50 de solape sobre secciones: **4.666 chunks, ids unicos**
+- [x] chunking de 220 palabras con 50 de solape sobre secciones: **4.674 chunks, ids unicos**
 - [x] bm25 escrito a mano, con la tabla de nombres español/griego/latino
 - [x] indice denso con `multilingual-e5-base` local, persistido en `index/`
 - [x] hibrido con `alpha`, que es lo que hace que las filas de la ablacion sean un parametro

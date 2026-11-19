@@ -144,8 +144,15 @@ def retrieve(state: State) -> State:
 
 
 def grade(state: State) -> State:
-    """decide si los chunks recuperados realmente responden la pregunta."""
-    return {"relevant": state["confidence"] >= ABSTAIN_THRESHOLD}
+    """decide si los chunks recuperados realmente responden la pregunta.
+
+    la lista vacia se revisa aparte y no sobra: con `alpha = 0.0` la confianza
+    sale del indice denso pero los chunks salen del lexico, y hay 7 preguntas
+    sin ningun nombre propio donde el bm25 no devuelve nada. sin este chequeo
+    `generate` recibiria una lista vacia y se caeria en `chunks[0]`.
+    """
+    hay_con_que = bool(state.get("chunks"))
+    return {"relevant": hay_con_que and state["confidence"] >= ABSTAIN_THRESHOLD}
 
 
 # palabras que empiezan con mayuscula pero no son nombres propios. en ingles

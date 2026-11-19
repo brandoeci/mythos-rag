@@ -25,6 +25,6 @@ jupyter==1.1.1
 # index.py, son treinta lineas y asi se entiende que hace cada parte, igual que
 # los n-gramas del taller 1 y el cbow del taller 2.
 #
-# torch queda en cpu. indexar los 4.666 chunks con multilingual-e5-base toma
+# torch queda en cpu. indexar los 4.674 chunks con multilingual-e5-base toma
 # unos 25 minutos asi, y por eso el indice se persiste en index/ en vez de
 # reconstruirse en cada corrida.

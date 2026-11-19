@@ -223,7 +223,16 @@ def score(questions: list[Question], config: str) -> dict:
 def ablation_table(questions: list[Question] | None = None) -> pd.DataFrame:
     """la tabla que sostiene el Resultados y Discusion del notebook."""
     questions = questions if questions is not None else load_questions()
-    return pd.DataFrame([score(questions, config) for config in CONFIGS])
+
+    configs = list(CONFIGS)
+    if not hay_cuota():
+        # sin cuota la fila de control no se puede correr, porque es el modelo
+        # contestando sin corpus. se omite en vez de llenarla de ceros, que se
+        # leerian como un resultado y no como una fila que no se midio.
+        configs = [c for c in configs if CONFIGS[c] is not None]
+        print("sin GOOGLE_API_KEY: se omite la fila llm_solo y la columna del juez")
+
+    return pd.DataFrame([score(questions, config) for config in configs])
 
 
 # --- calibrar el umbral de abstencion ---------------------------------------

@@ -391,6 +391,14 @@ class DenseIndex:
         )
         pairs = []
         for chunk_id, distance in zip(result["ids"][0], result["distances"][0]):
+            if chunk_id not in self.by_id:
+                # el indice de disco se construyo con otros chunks. pasa si se
+                # cambia el chunking o el corpus y no se reindexa, y hay que
+                # avisarlo: si se dejara pasar, la cita apuntaria a otro pasaje.
+                raise KeyError(
+                    f"el chunk {chunk_id} esta en {INDEX_DIR} pero no en los chunks "
+                    f"de esta corrida. borrar {INDEX_DIR} y correr index.py otra vez"
+                )
             # la pasamos a similitud para que, como en el bm25, mas sea mejor
             pairs.append((self.by_id[chunk_id], 1 - distance))
         return pairs
