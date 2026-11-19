@@ -494,7 +494,7 @@ y la tabla de ablacion, que es el argumento del proyecto. cada fila cambia una s
 | rag lexico (`alpha = 0`) | 6 | 8 | 0 | 0 | 7 |
 | rag denso (`alpha = 1`) | 9 | 9 | 0 | 0 | 7 |
 | rag hibrido (`alpha = 0.5`) | **11** | 9 | 0 | 0 | 7 |
-| rag hibrido + conflictos | **11** | 9 | **5** | 1 | 7 |
+| rag hibrido + conflictos | **11** | 9 | **2** | 0 | 7 |
 
 **el hibrido le gana a los dos indices solos**, que era la razon de tenerlos a los dos: 11 contra 9
 y 6. no es que uno sea mejor, es que fallan en preguntas distintas. el lexico no puede con "¿quien
@@ -594,7 +594,7 @@ los numeros de estas tablas.
 
 - [ ] subir el pasaje de oro de 11/20, que es el techo de todo lo demas
 - [ ] el juez con llm en `grade`, para las 3 preguntas que la señal lexica no puede atrapar
-- [ ] subir el recall del detector de conflictos (5/10 hoy) sin perder la precision
+- [ ] subir el recall del detector de conflictos (2/10 hoy) sin perder la precision
 - [ ] correr el notebook con la api key y guardar las salidas en el .ipynb
 - [ ] grabar el video de la demo
 

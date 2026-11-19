@@ -420,6 +420,15 @@ def detect_conflict(state: State) -> State:
         if chunk.work in por_obra:
             continue
         afirmacion = _afirmacion(state["question"], chunk, relaciones)
+
+        # la oracion tiene que nombrar al **sujeto de la pregunta**. sin esta
+        # condicion, "¿quien arrojo a Hefesto del Olimpo?" devolvia tres
+        # oraciones sobre Pandora, Cicreo y un tripode de Hesiodo, que no
+        # mencionan a Hefesto por ningun lado: la palabra de la relacion
+        # matcheaba y los nombres de alrededor eran cualquier cosa.
+        if not (set(_plano(afirmacion)) & de_la_pregunta):
+            continue
+
         nombres = _nombres_cerca(afirmacion, relaciones, de_la_pregunta)
         if nombres:
             por_obra[chunk.work] = (chunk, afirmacion, nombres)
