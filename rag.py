@@ -27,8 +27,6 @@ import re
 from dataclasses import dataclass, field
 from typing import Literal, TypedDict
 
-STUB = False
-
 # cuantos chunks se le pasan al generador. con mas de 6 la respuesta se diluye
 # y se gasta contexto; con menos se queda sin el segundo lado de la
 # contradiccion, que casi siempre esta en otra obra.

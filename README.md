@@ -682,26 +682,40 @@ tiene nada que mostrar. se chequea a mano, en media hora.
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate        # windows: .venv\Scripts\activate
+.venv\Scriptsctivate          # linux o mac: source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env             # y poner la api key de gemini
 ```
 
-el pipeline todavia no existe, pero **el esqueleto corre en modo stub**: con
-`rag.STUB = True` (el default), `rag.answer()` devuelve datos falsos con la
-forma definitiva.
+**la api key es opcional.** sin ella el sistema corre completo y responde de
+forma extractiva: devuelve el pasaje recuperado tal cual, con su cita. se lee
+peor, pero no puede alucinar porque no redacta nada, y es el piso contra el que
+se compara lo que agrega gemini. con la key, `generate` redacta en español.
 
 ```bash
-python app.py        # la interfaz, funcionando contra el stub
+cp .env.example .env             # y poner la key de gemini, si se tiene
 ```
 
-eso es a proposito. ximena construye y prueba la interfaz y el arnes de
-evaluacion desde hoy, sin esperar a que lancheros termine el pipeline. cuando
-los nodos esten listos se pone `rag.STUB = False` y nada mas cambia.
+lo primero es construir el indice. baja las ocho obras, las parte en secciones y
+chunks, y calcula los embeddings. **lo pesado es esto: unos 25 minutos en cpu**,
+y despues queda en `index/` y no se vuelve a hacer.
 
-lo que falta implementar esta marcado con `raise NotImplementedError("<nombre>")`
-en cada modulo, asi que `grep -rn NotImplementedError` da la lista de pendientes
-con su dueño.
+```bash
+python index.py
+```
+
+de ahi en adelante:
+
+```bash
+python rag.py "¿Quien era la madre de Afrodita?"   # una pregunta por consola
+python evaluate.py                                 # la tabla de ablacion
+python app.py                                      # la demo
+```
+
+y el entregable:
+
+```bash
+jupyter notebook proyecto.ipynb
+```
 
 ## licencia del corpus
 
