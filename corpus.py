@@ -190,11 +190,15 @@ def _attribute(title: str) -> str:
         return "hesiodo"
     if title in _EPIC_CYCLE:
         return "ciclo epico (fragmentos)"
-    if title.startswith("THE HOMERIC HYMNS") or title.startswith("THE EPIGRAMS OF HOMER"):
+    # ojo: estos dos titulos son los que trae el archivo. antes aca decia
+    # "THE EPIGRAMS OF HOMER" y "THE CONTEST OF HOMER AND HESIOD", que suenan
+    # bien y no existen, asi que las dos obras caian en el `return` del final y
+    # quedaban atribuidas a hesiodo: 27 chunks mal firmados.
+    if title.startswith("THE HOMERIC HYMNS") or title == "HOMER'S EPIGRAMS":
         return "homero (atribuido)"
     if re.match(r"^[IVXL]+\. TO ", title):  # los himnos numerados
         return "homero (atribuido)"
-    if title == "THE CONTEST OF HOMER AND HESIOD":
+    if title == "OF THE ORIGIN OF HOMER AND HESIOD, AND OF THEIR CONTEST":
         return "anonimo"
     if title in {"HOMERICA", "THE BATTLE OF FROGS AND MICE", "THE MARGITES", "THE CERCOPES"}:
         return "anonimo"
