@@ -230,10 +230,10 @@ para **encontrar** candidatos, no como los dos lados.
 
 ### lo que salio de indexar el corpus
 
-las cuatro de arriba salieron de leer los archivos. estas cuatro salieron de partirlos en chunks y
-de verificar el set de evaluacion contra el resultado, y no se veian antes. las cuatro son la misma
-cosa: **el texto del autor viene envuelto en texto que no es del autor**, y lo que lo envuelve es
-corto y denso en nombres propios, que es justo lo que el retrieval premia.
+las cuatro de arriba salieron de leer los archivos. estas cinco salieron de partirlos en chunks y
+de verificar el resultado, y no se veian antes. las cinco son la misma cosa: **el texto termina
+firmado por quien no lo escribio**, y cuando lo que se cuela es corto y denso en nombres propios,
+el retrieval ademas lo premia.
 
 **1. bulfinch tenia cada capitulo dos veces.** el archivo trae la tabla de contenido con los
 mismos encabezados que la obra, asi que el parser la leia como 24 secciones citables de 25 a 65
@@ -272,10 +272,26 @@ de paso salio un error nuestro: uno de los pasajes tenia una glosa `[Charis]` me
 las comillas, asi que no era verbatim y nunca iba a coincidir con el texto. la glosa se saco
 afuera. los 35 pasajes de oro estan verificados contra los chunks y se localizan todos.
 
-la leccion del metodo: ninguna de las cuatro se asomo leyendo los archivos ni mirando los chunks
-por encima. la 1 y la 2 salieron porque el chunking tiro **23 ids repetidos**, y la 4 porque se
-verifico que cada pasaje de oro exista de verdad en algun chunk. son chequeos baratos que hay que
-dejar corriendo, no revisiones de una sola vez.
+**5. dos obras de la antologia estaban firmadas por hesiodo.** `_attribute` tenia una rama para
+`"THE EPIGRAMS OF HOMER"` y otra para `"THE CONTEST OF HOMER AND HESIOD"`. los dos titulos suenan
+bien y **ninguno existe en el archivo**: ahi dicen `HOMER'S EPIGRAMS` y `OF THE ORIGIN OF HOMER AND
+HESIOD, AND OF THEIR CONTEST`. las dos ramas nunca se ejecutaban, asi que las dos obras caian en el
+`return` del final y quedaban como "hesiodo (atribuido)": **27 chunks mal firmados**, uno de ellos
+el Certamen, que es anonimo. salio de listar autor y obra de los 4.674 chunks y leer la lista.
+
+es la mas literal de todas: el codigo prometia separar a homero de hesiodo y lo hacia contra
+titulos inventados. los ids no dependen del autor, asi que corregirlo no obligo a reindexar.
+
+la leccion del metodo: ninguna de las cinco se asomo leyendo los archivos ni mirando los chunks
+por encima. cada una salio de un chequeo distinto, y los tres son baratos:
+
+| chequeo | que encontro |
+| --- | --- |
+| que los ids de los chunks sean unicos | la 1 y la 2 (23 ids repetidos) |
+| que cada pasaje de oro exista en algun chunk | la 4 (2 de 35 no estaban) |
+| listar autor y obra de los 4.674 chunks y leerla | la 5 (27 chunks mal firmados) |
+
+son chequeos que conviene dejar corriendo, no revisiones de una sola vez.
 
 ### la tabla de nombres: sin ella el indice lexico no sirve para nada
 
