@@ -316,7 +316,6 @@ def embed_passages(texts: list[str]) -> np.ndarray:
         [PASSAGE_PREFIX + t for t in texts],
         normalize_embeddings=True,
         batch_size=16,
-        show_progress_bar=True,
     )
 
 
@@ -349,22 +348,40 @@ class DenseIndex:
             metadata={"hnsw:space": "cosine"},
         )
 
-    def build(self, chunks: list[Chunk]) -> None:
-        """calcula los embeddings y los guarda. solo se corre una vez."""
-        if self.collection.count() == len(chunks):
+    def build(self, chunks: list[Chunk], lote: int = 250) -> None:
+        """calcula los embeddings y los guarda, lote por lote.
+
+        cada lote se embebe y se inserta antes de pasar al siguiente, y los que
+        ya estan en la coleccion se saltan. asi la construccion **se puede
+        retomar**: si se corta a la mitad, la siguiente corrida sigue donde iba
+        en vez de empezar de cero.
+
+        la primera version embebia los 4.666 de una y recien ahi insertaba. se
+        corto en el 70% por falta de memoria de la maquina y se perdieron los 16
+        minutos completos, porque no habia nada guardado todavia.
+        """
+        if self.collection.count() >= len(chunks):
             print(f"el indice ya tiene los {len(chunks)} chunks, no lo reconstruimos")
             return
 
-        vectors = embed_passages([chunk.text for chunk in chunks])
-        # chroma se atora si se le mandan los 4 mil de una
-        for start in range(0, len(chunks), 500):
-            batch = chunks[start : start + 500]
+        for start in range(0, len(chunks), lote):
+            batch = chunks[start : start + lote]
+
+            # los que ya estan de una corrida anterior
+            ya = set(self.collection.get(ids=[c.id for c in batch])["ids"])
+            batch = [c for c in batch if c.id not in ya]
+            if not batch:
+                continue
+
+            vectors = embed_passages([chunk.text for chunk in batch])
             self.collection.add(
                 ids=[c.id for c in batch],
                 documents=[c.text for c in batch],
                 metadatas=[c.metadata for c in batch],
-                embeddings=vectors[start : start + 500].tolist(),
+                embeddings=vectors.tolist(),
             )
+            print(f"   {self.collection.count():>5} / {len(chunks)} chunks")
+
         print(f"indexados {self.collection.count()} chunks en {INDEX_DIR}")
 
     def search(self, query: str, k: int = 8) -> list[tuple[Chunk, float]]:
