@@ -228,6 +228,68 @@ erudito, y citado como "riley, notas a ovidio" es una fuente legitima. el limite
 siempre citan autores que no estan en nuestro corpus (pausanias, diodoro, higino), asi que sirven
 para **encontrar** candidatos, no como los dos lados.
 
+### lo que salio de indexar el corpus
+
+las cuatro de arriba salieron de leer los archivos. estas tres salieron de partirlos en chunks, y
+no se veian antes.
+
+**1. bulfinch tenia cada capitulo dos veces.** el archivo trae la tabla de contenido con los
+mismos encabezados que la obra, asi que el parser la leia como 24 secciones citables de 25 a 65
+palabras, puros nombres propios seguidos: *"Juno. Syrinx, or Pandean Pipes. Argus's Eyes. Io.
+Callisto..."*. y eso en bm25 no es un detalle cosmetico: el score se divide por el largo del
+documento, asi que un parrafo corto y lleno de nombres le gana a cualquier capitulo de verdad.
+toda cita de bulfinch habria apuntado al indice del libro.
+
+**2. el capitulo II estaba escrito distinto a los otros 57.** el archivo tiene 58 encabezados: 57
+dicen `Chapter` y uno dice `CHAPTER II`. el patron no lo veia, asi que el capitulo II completo, que
+es *Prometheus and Pandora*, quedaba pegado al I: 11.203 palabras contra las 4.643 que tiene de
+verdad. pandora esta en el catalogo de contradicciones, o sea que esa pregunta citaba el capitulo
+equivocado. es exactamente la cita falsa que el proyecto promete no hacer, y no se asomo por
+ningun lado hasta que el chunking tiro 23 ids repetidos.
+
+**3. berens cierra con un anuncio de la editorial.** despues del indice de pronunciacion, que son
+19 secciones de una letra cada una (*"Jani (ja'-ni), 178. Janus (ja'-nus), 18, 178."*), viene un
+anuncio de 1.415 palabras de un curso de ingles. y abre con el prefacio, que habla de por que el
+libro sirve para los colegios. de 166 secciones quedaron 143 citables.
+
+las tres son la misma cosa: el texto del autor viene envuelto en texto que **no** es del autor, y
+lo que lo envuelve es corto y denso en nombres propios, que es justo lo que el retrieval premia.
+por eso se revisa seccion por seccion y no por encima.
+
+### la tabla de nombres: sin ella el indice lexico no sirve para nada
+
+el corpus esta en ingles y las preguntas van en español. medido sobre los 4.666 chunks:
+
+| en español | apariciones | forma griega | apariciones | forma latina | apariciones |
+| --- | --- | --- | --- | --- | --- |
+| afrodita | **0** | aphrodite | 143 | venus | 199 |
+| hefesto | **0** | hephaestus | 76 | vulcan | 114 |
+| persefone | **0** | persephone | 58 | proserpine | 62 |
+| aquiles | **0** | achilles | 807 | — | — |
+| escila | **0** | scylla | 94 | — | — |
+| — | — | zeus | 878 | jove | 949 |
+| — | — | hera | 180 | juno | 306 |
+
+dos cosas. la primera es que sin traducir los nombres el bm25 devuelve **cero resultados en las 30
+preguntas**: con la tabla baja a 7, y las 7 que quedan vacias no tienen ningun nombre propio
+("¿quien creo a la humanidad?", "¿que habia al principio del mundo?"), que es justo el trabajo del
+indice denso. la ablacion queda limpia: el lexico responde por los nombres, el denso por los
+conceptos.
+
+la segunda no la esperabamos: **para cada dios el nombre latino es mas frecuente que el griego**,
+porque butler traduce la iliada y la odisea con los romanos. preguntar por zeus y no buscar jove
+deja afuera mas de la mitad. por eso cada entrada de la tabla lleva las dos formas, y por eso la
+expansion se aplica **solo a la consulta** y nunca a los documentos: asi se puede corregir la tabla
+sin reindexar, y ningun chunk termina con tokens que no tiene.
+
+### el bm25 lo escribimos nosotros
+
+va en `index.py`, treinta lineas, en vez de traer `rank-bm25`. las razones, en orden: en el taller
+1 el modelo de n-gramas se hizo a mano y en el taller 2 el cbow tambien, asi que es lo que el curso
+ha venido haciendo; se entiende que hace cada parte cuando toca explicarlo; y el entregable queda
+con una dependencia menos. el idf y la normalizacion por largo son las formulas estandar, con
+`k1 = 1.5` y `b = 0.75` sin calibrar.
+
 ### catalogo de contradicciones (en `eval/questions.json`)
 
 **las 10 verificadas**, con los pasajes de cada lado en el campo `passages`. y resultaron de tres

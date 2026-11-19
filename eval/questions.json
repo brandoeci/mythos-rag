@@ -18,7 +18,7 @@
       "question": "¿Que contenia la jarra que abrio Pandora: males o bendiciones?",
       "reference": "Las fuentes se contradicen. Hesiodo dice que la jarra contenia males y que solo la Esperanza quedo dentro. Berens dice lo contrario: que contenia las bendiciones reservadas a la humanidad, que todas escaparon y que Pandora alcanzo a atrapar la Esperanza. Bulfinch recoge las dos versiones y se inclina por la de las bendiciones, argumentando que la Esperanza no podria haber estado guardada en una jarra llena de males.",
       "expected_sources": [
-        "hesiodo, himnos homericos y homerica",
+        "hesiod's works and days",
         "myths and legends",
         "the age of fable"
       ],
@@ -35,7 +35,7 @@
       "question": "¿Quien era la madre de Afrodita?",
       "reference": "Las fuentes se contradicen. En Hesiodo, Afrodita no tiene madre: nace de la espuma del mar que se formo alrededor de los miembros de Urano despues de que Crono lo mutilara. En la Iliada, en cambio, Venus tiene madre, y es Dione, que la atiende en el Olimpo cuando Diomedes la hiere. Bulfinch enuncia las dos versiones de forma explicita.",
       "expected_sources": [
-        "hesiodo, himnos homericos y homerica",
+        "the theogony",
         "iliada",
         "the age of fable"
       ],
@@ -51,7 +51,7 @@
       "question": "¿De quien era hijo Eros?",
       "reference": "Las fuentes se contradicen. En la Teogonia de Hesiodo, Eros no tiene padres: es uno de los primeros seres que llegan a existir, junto con el Caos, la Tierra y el Tartaro. Berens, en cambio, lo presenta como hijo de Afrodita. Berens incluso senala que en la Teogonia Afrodita pertenece a las divinidades mas antiguas, a diferencia de las posteriores que descienden unas de otras.",
       "expected_sources": [
-        "hesiodo, himnos homericos y homerica",
+        "the theogony",
         "myths and legends"
       ],
       "passages": [
@@ -175,7 +175,7 @@
       "question": "¿Por que recibio Pandora ese nombre?",
       "reference": "Porque todos los que habitaban el Olimpo le dieron un don cada uno.",
       "expected_sources": [
-        "hesiodo, himnos homericos y homerica"
+        "hesiod's works and days"
       ],
       "passages": [
         "Hesiodo, Trabajos y Dias: \"And he called this woman Pandora, because all they who dwelt on Olympus gave each a gift, a plague to men who eat bread.\""
@@ -187,7 +187,7 @@
       "question": "¿A quien le entregaron a Pandora?",
       "reference": "A Epimeteo. Zeus se la envio como regalo por medio de Hermes, y Epimeteo la acepto olvidando la advertencia de Prometeo de no recibir nunca un regalo de Zeus.",
       "expected_sources": [
-        "hesiodo, himnos homericos y homerica"
+        "hesiod's works and days"
       ],
       "passages": [
         "Hesiodo, Trabajos y Dias (ll. 83-89): \"the Father sent glorious Argos-Slayer, the swift messenger of the gods, to take it to Epimetheus as a gift. And Epimetheus did not think on what Prometheus had said to him, bidding him never take a gift of Olympian Zeus\""
@@ -199,7 +199,7 @@
       "question": "¿Por que se le dice Citerea a Afrodita?",
       "reference": "Porque llego a la isla de Citera. Hesiodo da las dos etimologias en el mismo pasaje: espumosa porque crecio entre la espuma, y Citerea porque alcanzo Citera.",
       "expected_sources": [
-        "hesiodo, himnos homericos y homerica"
+        "the theogony"
       ],
       "passages": [
         "Hesiodo, Teogonia: \"Her gods and men call Aphrodite, and the foam-born goddess and rich-crowned Cytherea, because she grew amid the foam, and Cytherea because she reached Cythera\""
@@ -308,7 +308,7 @@
       "question": "¿Hefesto tuvo padre?",
       "reference": "Las fuentes se contradicen. En la Teogonia de Hesiodo, Hera lo pario sin union con Zeus, por despecho tras pelear con su marido: Hefesto no tiene padre. Berens y Bulfinch, en cambio, lo presentan como hijo de los dos.",
       "expected_sources": [
-        "hesiodo, himnos homericos y homerica",
+        "the theogony",
         "myths and legends",
         "the age of fable"
       ],
@@ -324,7 +324,7 @@
       "question": "¿Quien creo a la humanidad?",
       "reference": "Las fuentes se contradicen. En Hesiodo fueron los dioses del Olimpo en conjunto los que hicieron una raza de oro de hombres mortales, en tiempos de Cronos. En Bulfinch fue Prometeo: Deucalion lo llama \"nuestro antepasado\" y dice que ojala tuvieran su poder para rehacer la raza como el la hizo al principio.",
       "expected_sources": [
-        "hesiodo, himnos homericos y homerica",
+        "hesiod's works and days",
         "the age of fable"
       ],
       "passages": [
@@ -338,7 +338,7 @@
       "question": "¿Que habia al principio del mundo?",
       "reference": "Las dos cosmogonias no coinciden. En Hesiodo el Caos es un ser que llega a existir primero, y despues la Tierra, el Tartaro y Eros; de ese Caos nacen luego Erebo y la Noche. En Ovidio el Caos no engendra nada: es el nombre que los hombres le dieron al estado desordenado en que ya estaban el mar, la tierra y el cielo, una masa inerte que un dios despues separa.",
       "expected_sources": [
-        "hesiodo, himnos homericos y homerica",
+        "the theogony",
         "metamorfosis"
       ],
       "passages": [

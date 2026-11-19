@@ -2,18 +2,24 @@
 
 responsable: ximena.
 
-funciona contra el stub de rag.answer(), asi que se puede construir y probar
-antes de que el pipeline exista. cuando rag.STUB pase a False, esto no cambia.
+la demo tiene el control de alpha a la vista a proposito: mover el deslizador
+de 1.0 a 0.0 cambia el sistema de "solo denso" a "solo bm25" y se ve en vivo lo
+mismo que dice la tabla de ablacion.
 """
+
+import os
 
 import gradio as gr
 
 from rag import Answer, answer
 
+# una de cada grupo del set de evaluacion: una que esta, una donde las fuentes
+# se contradicen, y una que no esta en el corpus y tiene que abstenerse.
 EXAMPLES = [
-    "quien fue la madre de heracles?",
-    "cuantos trabajos de heracles cuentan las fuentes?",
-    "que dice el corpus sobre la guerra de las galias?",
+    "¿Por que recibio Pandora ese nombre?",
+    "¿Quien era la madre de Afrodita?",
+    "¿Quien arrojo a Hefesto del Olimpo y quien lo recogio?",
+    "¿Quien acompaño a Gilgamesh en su viaje?",
 ]
 
 
@@ -41,12 +47,12 @@ def format_conflict(result: Answer) -> str:
     return "\n".join(lines)
 
 
-def ask(question: str) -> tuple[str, str, str]:
+def ask(question: str, alpha: float) -> tuple[str, str, str]:
     question = (question or "").strip()
     if not question:
         return "escribe una pregunta.", "", ""
 
-    result = answer(question)
+    result = answer(question, alpha=alpha)
     prefix = "**no esta en el corpus.** " if result.abstained else ""
     return prefix + result.text, format_citations(result), format_conflict(result)
 
@@ -60,10 +66,20 @@ def build_ui() -> gr.Blocks:
             "fuentes no coinciden se muestran las dos versiones."
         )
 
+        if not os.environ.get("GOOGLE_API_KEY"):
+            gr.Markdown(
+                "> sin `GOOGLE_API_KEY`: la respuesta es el pasaje recuperado "
+                "tal cual, sin redactar. las citas y los conflictos funcionan igual."
+            )
+
         question = gr.Textbox(
             label="pregunta",
             placeholder="quien fue la madre de heracles?",
             lines=2,
+        )
+        alpha = gr.Slider(
+            0.0, 1.0, value=0.5, step=0.1,
+            label="alpha: 1.0 solo embeddings, 0.0 solo bm25",
         )
         submit = gr.Button("consultar", variant="primary")
 
@@ -75,8 +91,8 @@ def build_ui() -> gr.Blocks:
         gr.Examples(examples=EXAMPLES, inputs=question)
 
         outputs = [response, citations, conflict]
-        submit.click(ask, inputs=question, outputs=outputs)
-        question.submit(ask, inputs=question, outputs=outputs)
+        submit.click(ask, inputs=[question, alpha], outputs=outputs)
+        question.submit(ask, inputs=[question, alpha], outputs=outputs)
 
     return demo
 
