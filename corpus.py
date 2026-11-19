@@ -396,8 +396,22 @@ _BERENS_FUERA = {"preface", "contents"}
 _BERENS_FIN = "pronouncing index"
 
 
+# las notas de berens empiezan con su numero entre corchetes.
+_BERENS_NOTA = re.compile(r"^\[\d{1,3}\]")
+
+
 def _sections_berens(source: Source, text: str) -> list[Section]:
     paras = [" ".join(p.split()) for p in text.split("\n\n") if p.strip()]
+
+    # las notas van al final del archivo, **despues** del indice de
+    # pronunciacion, asi que en el original quedaban colgadas del encabezado del
+    # anuncio de la editorial: la cita salia como "berens, a complete course in
+    # the study of english". son texto propio de berens, a diferencia de las
+    # notas de riley en ovidio, que son de otro autor comentando a ovidio, y de
+    # ellas dependen dos de las preguntas verificadas: quien era la esposa de
+    # hefesto y quienes lo rescataron del mar. van a su propia seccion.
+    notas = [p for p in paras if _BERENS_NOTA.match(p)]
+    paras = [p for p in paras if not _BERENS_NOTA.match(p)]
 
     last_at: dict[str, int] = {}
     for i, para in enumerate(paras):
@@ -421,6 +435,11 @@ def _sections_berens(source: Source, text: str) -> list[Section]:
         if section.locator in _BERENS_FUERA:
             continue
         citables.append(section)
+
+    if notas:
+        citables.append(
+            Section(source.author, source.work, "notas", "\n\n".join(notas))
+        )
     return citables
 
 
