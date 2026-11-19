@@ -32,10 +32,13 @@ from typing import Literal, TypedDict
 # contradiccion, que casi siempre esta en otra obra.
 TOP_K = 6
 
-# umbral de confianza del retrieval por debajo del cual el sistema se abstiene.
-# se calibra con el grupo "fuera" de las preguntas de evaluacion, no a ojo:
-# ver la seccion de calibracion del notebook.
-ABSTAIN_THRESHOLD = 0.80
+# piso de confianza del retrieval. se calibro con el grupo "fuera" y el
+# resultado fue que **no sirve**: las similitudes de los tres grupos se
+# superponen (fuera 0.766-0.805, directa 0.789-0.826), asi que cualquier umbral
+# que atrape las preguntas sin respuesta tumba tambien las buenas. queda en
+# 0.70, debajo de todo lo observado, o sea solo como piso para una consulta
+# degenerada. la abstencion de verdad la decide `sin_evidencia_lexica`.
+ABSTAIN_THRESHOLD = 0.70
 
 MODEL = "gemini-2.5-flash"
 
@@ -143,16 +146,75 @@ def retrieve(state: State) -> State:
     }
 
 
+def entidades_de_la_pregunta(question: str) -> list[list[str]]:
+    """los nombres propios de la pregunta, cada uno con sus formas en el corpus.
+
+    dos fuentes: la tabla de nombres (afrodita -> aphrodite, venus, cytherea) y
+    las palabras con mayuscula que no abren la pregunta, para los nombres que no
+    estan en la tabla porque se escriben igual en los dos idiomas (Gilgamesh,
+    Sigurd, Cuchulainn).
+    """
+    from index import NOMBRES, STOPWORDS, STOPWORDS_CONSULTA, tokenize
+
+    entidades = []
+    for token in tokenize(question):
+        if token in NOMBRES:
+            entidades.append([token] + NOMBRES[token])
+
+    for palabra in re.findall(r"\b[A-ZÁÉÍÓÚÑ][a-záéíóúñ]{2,}", question[1:]):
+        token = next(iter(tokenize(palabra)), "")
+        if not token or token in STOPWORDS or token in STOPWORDS_CONSULTA:
+            continue
+        if not any(token in formas for formas in entidades):
+            entidades.append([token])
+
+    return entidades
+
+
+def sin_evidencia_lexica(question: str) -> bool:
+    """¿la pregunta nombra entidades y **ninguna** esta en el corpus?
+
+    es la señal de abstencion, y sale del indice **lexico**, no del denso. no
+    era lo que esperabamos: medimos la similitud del coseno en los tres grupos
+    de preguntas y las distribuciones se superponen casi del todo (fuera llega
+    a 0.805 y directa arranca en 0.789), asi que **no existe un umbral que las
+    separe**. el bm25 si: para "Sigurd", "Gilgamesh" o "Tule" devuelve cero
+    porque esos terminos no estan, y para las que si estan devuelve de 4.84
+    para arriba.
+
+    la condicion es "nombra entidades **y** ninguna aparece", no "el bm25 dio
+    cero". son distintas: "¿quien creo a la humanidad?" y "¿que habia al
+    principio del mundo?" tambien dan cero, porque no tienen ningun nombre
+    propio, y esas dos **si** tienen respuesta en el corpus. sin esa distincion
+    el sistema se abstendria de dos preguntas buenas.
+    """
+    _, lexical, _ = indices()
+    entidades = entidades_de_la_pregunta(question)
+    if not entidades:
+        return False
+    return not any(
+        forma in lexical.postings for formas in entidades for forma in formas
+    )
+
+
 def grade(state: State) -> State:
     """decide si los chunks recuperados realmente responden la pregunta.
 
-    la lista vacia se revisa aparte y no sobra: con `alpha = 0.0` la confianza
-    sale del indice denso pero los chunks salen del lexico, y hay 7 preguntas
-    sin ningun nombre propio donde el bm25 no devuelve nada. sin este chequeo
-    `generate` recibiria una lista vacia y se caeria en `chunks[0]`.
+    tres condiciones, y la que de verdad decide es la segunda:
+
+    1. que haya chunks. con `alpha = 0.0` la confianza sale del indice denso
+       pero los chunks salen del lexico, y sin este chequeo `generate` recibiria
+       una lista vacia y se caeria en `chunks[0]`.
+    2. que alguna entidad de la pregunta exista en el corpus. ver
+       `sin_evidencia_lexica`.
+    3. el umbral sobre el coseno, que quedo como piso para consultas
+       degeneradas. lo medimos y **no separa nada** en este set de preguntas, y
+       asi queda dicho en el notebook en vez de dejarlo puesto como si aportara.
     """
     hay_con_que = bool(state.get("chunks"))
-    return {"relevant": hay_con_que and state["confidence"] >= ABSTAIN_THRESHOLD}
+    hay_evidencia = not sin_evidencia_lexica(state["question"])
+    sobre_el_piso = state["confidence"] >= ABSTAIN_THRESHOLD
+    return {"relevant": hay_con_que and hay_evidencia and sobre_el_piso}
 
 
 # palabras que empiezan con mayuscula pero no son nombres propios. en ingles

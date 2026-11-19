@@ -90,10 +90,10 @@
       ]
     },
     {
-      "id": "fuera-01-hyperborea",
+      "id": "fuera-01-sigurd",
       "group": "fuera",
-      "question": "¿Que dice el corpus sobre Hiperborea?",
-      "reference": "Hiperborea no aparece en ninguna de las ocho obras.",
+      "question": "¿Como murio Sigurd y quien lo traiciono?",
+      "reference": "Sigurd no aparece en ninguna de las ocho obras, ni con ese nombre ni como Siegfried, y tampoco Volsung, Brynhild, Fafnir ni los Nibelungos. Es un negativo dificil a proposito: el corpus SI trae mitologia nordica (loki 59 veces, valhalla 18, balder 10, freya 9), asi que la cercania tematica invita a responder. El sistema no debe completar el ciclo heroico de los Volsungos a partir del panteon. Reemplaza la pregunta de Hiperborea, que estaba mal clasificada.",
       "expected_sources": [],
       "passages": []
     },
@@ -162,10 +162,10 @@
       "passages": []
     },
     {
-      "id": "fuera-10-colas-cerbero",
+      "id": "fuera-10-caballo-medidas",
       "group": "fuera",
-      "question": "¿Cuantas colas tenia Cerbero?",
-      "reference": "El corpus no lo dice. Se habla de sus cabezas (6 pasajes con 'cerberus' cerca de 'heads') pero nunca de colas (0 pasajes cerca de 'tails'). Tipo dato-ausente, y especialmente tramposa porque un modelo sin corpus suele responder con la cola de serpiente de otras tradiciones.",
+      "question": "¿De que tamano era el caballo de madera de Troya?",
+      "reference": "El corpus describe el caballo en 19 chunks de seis obras distintas (la Pequena Iliada, el Saqueo de Ilion, la Odisea, Bulfinch y Berens), pero no da nunca una medida. Lo unico que dice es cualitativo: \"made so huge for the express purpose of preventing its being carried within the walls\" y \"this huge contrivance\". No hay codos, pies, brazas ni ninguna cifra. Es la clase de pregunta donde el retrieval trae pasajes muy relevantes y el modelo queda tentado a inventar un numero. Reemplaza la pregunta de las colas de Cerbero, que si tenia respuesta.",
       "expected_sources": [],
       "passages": []
     },

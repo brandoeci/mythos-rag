@@ -140,6 +140,24 @@ STOPWORDS = {
     "they", "to", "was", "were", "which", "who", "with",
 }
 
+# estas se quitan **solo de la consulta**, nunca de los documentos.
+#
+# son palabras funcion del español que de casualidad tambien son palabras en
+# ingles, que es el peor caso: pasan el filtro y encima traen idf alto porque
+# en el corpus son raras. "¿quien ERA mitra?" y "¿de que tamaño ERA el
+# caballo?" daban las dos 6.53 de bm25, y el unico token que matcheaba era
+# "era", el sustantivo ingles de "the Christian era", en 8 chunks con idf 6.31.
+#
+# van aparte y no en STOPWORDS porque esa lista se aplica a los dos lados, y
+# ahi "son" borraria todos los "son of Zeus", que es justo lo que necesitan las
+# preguntas de genealogia, y "pan" borraria al dios Pan.
+STOPWORDS_CONSULTA = {
+    "era", "eran", "fue", "fueron", "son", "ser", "sea", "ha", "han", "hay",
+    "le", "les", "me", "te", "tenia", "tenian", "dice", "dicen", "cuenta",
+    "cuantas", "cuantos", "cuanto", "cuanta", "quienes", "ese", "esa", "esos",
+    "esas", "estos", "estas", "papel", "parte",
+}
+
 
 def tokenize(text: str) -> list[str]:
     """tokens para bm25: minusculas, sin tildes y solo letras.
@@ -204,6 +222,7 @@ NOMBRES = {
     "poseidon": ["poseidon", "neptune"],
     "prometeo": ["prometheus"],
     "tetis": ["thetis"],
+    "troya": ["troy", "trojan", "trojans", "ilium"],
     "tule": ["thule"],
     "ulises": ["ulysses", "odysseus"],
     "venus": ["venus", "aphrodite", "cytherea"],
@@ -226,6 +245,8 @@ def tokenize_query(text: str) -> list[str]:
     """
     tokens = []
     for token in tokenize(text):
+        if token in STOPWORDS_CONSULTA:
+            continue
         tokens.append(token)
         tokens.extend(NOMBRES.get(token, []))
     return tokens
